@@ -13,6 +13,16 @@ various inspection tools.
 
 # Translation of VHDL to javascript
 
+## vhdl2xml
+
+Subdirectory vhdl2xml contains GHDL (r150,gcc-4.7.2) patch. It adds the --xml switch
+to ghdl. When given, the GHDL parser AST tree will be dumped as XML.
+
+## xml2js
+
+Subdirectory xml2js contains a perl script hdl2js.pl that converts the GHDL XML output to javascript. 
+hdl2js.pl requires XML::LibXML to be installed (perl -MCPAN -e shell ... "install XML::LibXML").
+
 ## Types
 
 A VHDL type definition is converted to a Javascript type definition by 
