@@ -28,7 +28,7 @@ package vhdltokmain is
    pragma Export (C, u00007, "str_tableB");
    u00008 : constant Version_32 := 16#675e2eee#;
    pragma Export (C, u00008, "str_tableS");
-   u00009 : constant Version_32 := 16#d542b0f8#;
+   u00009 : constant Version_32 := 16#ffa33921#;
    pragma Export (C, u00009, "name_tableB");
    u00010 : constant Version_32 := 16#1f617c2d#;
    pragma Export (C, u00010, "name_tableS");
@@ -46,15 +46,15 @@ package vhdltokmain is
    pragma Export (C, u00016, "listsB");
    u00017 : constant Version_32 := 16#c68098ca#;
    pragma Export (C, u00017, "listsS");
-   u00018 : constant Version_32 := 16#5ee09da0#;
+   u00018 : constant Version_32 := 16#a22abd04#;
    pragma Export (C, u00018, "libvhdltokB");
-   u00019 : constant Version_32 := 16#7f5e4c09#;
+   u00019 : constant Version_32 := 16#b2d4b063#;
    pragma Export (C, u00019, "libvhdltokS");
    u00020 : constant Version_32 := 16#923d5f41#;
    pragma Export (C, u00020, "erroroutB");
    u00021 : constant Version_32 := 16#e860e3c5#;
    pragma Export (C, u00021, "erroroutS");
-   u00022 : constant Version_32 := 16#c6637c84#;
+   u00022 : constant Version_32 := 16#0be980ee#;
    pragma Export (C, u00022, "testB");
    u00023 : constant Version_32 := 16#ef827416#;
    pragma Export (C, u00023, "iirs_utilsB");

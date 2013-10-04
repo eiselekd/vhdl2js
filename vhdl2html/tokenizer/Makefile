@@ -14,10 +14,10 @@ run-static:
 lib-shared:
 	-rm *.o lib
 	mkdir -p lib
-	gnatmake -Plibvhdltok.shared.gpr -v
+	gnatmake -Plibvhdltok_shared.gpr -v
 
 test-shared: lib-shared
-	gcc -g test.c -o lib/test.exe -Llib -lvhdltok
+	gcc -g test_shared.c -o lib/test.exe -Llib -lvhdltok
 
 #	gnatmake -c libvhdltok.adb
 #	gcc -shared -o libvhdltok.so *.o
@@ -31,7 +31,7 @@ run-shared:
 
 
 gdb:
-	DYLD_LIBRARY_PATH=$(CURDIR)/lib:/opt/gcc-4.7.2-ghdl/lib/gcc/x86_64-apple-darwin11.4.2/4.7.2/adalib lib/test.exe
+	DYLD_LIBRARY_PATH=$(CURDIR)/lib:/opt/gcc-4.7.2-ghdl/lib/gcc/x86_64-apple-darwin11.4.2/4.7.2/adalib gdb --args lib/test.exe
 
 
 info:

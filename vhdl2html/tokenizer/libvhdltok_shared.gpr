@@ -1,4 +1,4 @@
-library project libvhdltok is
+library project libvhdltok_shared is
        for Languages    use ("Ada", "C");
        for Source_Dirs  use (".");
        for Library_Dir  use "lib";
@@ -15,4 +15,4 @@ library project libvhdltok is
      	    for Switches ("proc.adb")
               use ("-g");
       end Compiler;
-end libvhdltok;
+end libvhdltok_shared;
