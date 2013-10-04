@@ -5,8 +5,10 @@ lib-static:
 	mkdir -p lib
 	gnatmake -Plibvhdltok.gpr -v
 
+LIBGNAT=$(shell gnatls -v | perl libgnat.pl)
+
 test-static: lib-static
-	gcc -g test.c -o lib/test.exe lib/libvhdltok.a /opt/gcc-4.7.2-ghdl/lib/gcc/x86_64-apple-darwin11.4.2/4.7.2/adalib/libgnat.a 
+	gcc -g test.c -o lib/test.exe lib/libvhdltok.a $(LIBGNAT)/libgnat.a 
 
 run-static:
 	lib/test.exe
@@ -37,6 +39,7 @@ gdb:
 
 info:
 	gnatls -v
+	gnatls -v | perl libgnat.pl
 	otool -L lib/test.exe
 
 clean:
