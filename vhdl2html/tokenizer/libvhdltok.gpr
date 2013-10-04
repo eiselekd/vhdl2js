@@ -1,0 +1,18 @@
+library project libvhdltok is
+       for Languages    use ("Ada", "C");
+       for Source_Dirs  use (".");
+       for Library_Dir  use "lib";
+--       for Library_Kind use "dynamic";
+       for Library_Kind use "static";
+       for Library_Name use "vhdltok";
+--       for Library_Auto_Init use "true";
+--       for Library_Interface use ("libvhdltok","Scan","Errorout", "Iirs","Lists","Nodes","Types","Tokens","Files_Map","Flags","Name_Table","Std_Names","Str_Table");
+--       for Library_Standalone use "encapsulated";
+       
+       package Compiler is
+            for Default_Switches ("Ada")
+       	      use ("-g"); -- "-gnatg"
+     	    for Switches ("proc.adb")
+              use ("-g");
+      end Compiler;
+end libvhdltok;

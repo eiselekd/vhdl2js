@@ -1,4 +1,4 @@
-ghdl svn-r150 note:
+ghdl (http://ghdl.free.fr/), svn-r150 note: 
 To compile on a 32-bit machine you need to revert the patch
 for ortho-lang.c like this:
 
