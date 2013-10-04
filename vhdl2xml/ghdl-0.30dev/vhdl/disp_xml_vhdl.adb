@@ -2976,10 +2976,10 @@ package body disp_xml_vhdl is
       Scheme := Get_Generation_Scheme (Stmt);
       case Get_Kind (Scheme) is
          when Iir_Kind_Iterator_Declaration =>
-            null;--            Put ("for ");
+            AddAttr(N,+"typ",+("for"));
             Disp_Parameter_Specification (N,NewN(N,+"-"),Scheme);
          when others =>
-            null;--            Put ("if ");
+            AddAttr(N,+"typ",+("if"));
             Disp_Expression (N,NewN(N,+"-"),Scheme);
       end case;
       null;--      Put_Line (" generate");

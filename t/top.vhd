@@ -23,11 +23,18 @@ architecture rtl of top is
   
 begin
 
-  e0: for i in gcnt-1 downto 0 generate
+  --e0: for i in gcnt-1 downto 0 generate
+  --  t0 : e1
+  --    generic map ( gcnt, glen )
+  --    port map (tin0(i), clk, i0(i), o0(i));
+  --end generate e0;
+
+  e0:  if gcnt-1 = 1 generate
     t0 : e1
       generic map ( gcnt, glen )
-      port map (tin0(i), clk, i0(i), o0(i));
+      port map (tin0(0), clk, i0(0), o0(0));
   end generate e0;
+
   
 end;
 
