@@ -46,7 +46,7 @@ package vhdltokmain is
    pragma Export (C, u00016, "listsB");
    u00017 : constant Version_32 := 16#c68098ca#;
    pragma Export (C, u00017, "listsS");
-   u00018 : constant Version_32 := 16#f6bdb860#;
+   u00018 : constant Version_32 := 16#06b36031#;
    pragma Export (C, u00018, "libvhdltokB");
    u00019 : constant Version_32 := 16#c914d9a2#;
    pragma Export (C, u00019, "libvhdltokS");

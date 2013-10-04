@@ -31,11 +31,11 @@ package body libvhdltok is
    begin
       
       
-	System.Exceptions'Elab_Spec ;
-        System.Exception_Table'Elab_Body ;
+--	System.Exceptions'Elab_Spec ;
+--        System.Exception_Table'Elab_Body ;
 	
-        System.Soft_Links'Elab_Spec ;
-        System.Soft_Links'Elab_Body ;
+--        System.Soft_Links'Elab_Spec ;
+--        System.Soft_Links'Elab_Body ;
 	
         System.Secondary_Stack'Elab_Body ;
     --  Ada.Exceptions'Elab_Spec ;
