@@ -22,6 +22,7 @@ with Ada.Finalization ;
 with Name_Table; use Name_Table;
 with Str_Table; use Str_Table;
 with Tokens; use Tokens;
+with Interfaces.C.Strings; use Interfaces.C.Strings;
 
 package body libvhdltok is
    
@@ -63,18 +64,30 @@ package body libvhdltok is
 	
    end  Vhdltok_Init;
    
-   procedure Vhdltok_Scan is
+   function Value_Without_Exception(S : chars_ptr) return String is
+      -- Translate S from a C-style char* into an Ada String.
+      -- If S is Null_Ptr, return "", don't raise an exception.
+   begin
+      if S = Null_Ptr then return "";
+      else return Value(S);
+      end if;
+   end Value_Without_Exception;
+ 
+ pragma Inline(Value_Without_Exception);   
+   procedure Vhdltok_Scan(D : Chars_Ptr; F : chars_ptr) is
       S : Source_File_Entry;
       I : String_Id;
       I0 : Name_Id;
       I1 : Name_Id;
+      DAda : String := Value_Without_Exception(D);
+      FAda : String := Value_Without_Exception(F);
    begin
       
       Put_Line("Inside libvhdltok");
       
       I := Str_Table.Start;
-      I0 := Get_Identifier ("./");
-      I1 := Get_Identifier ("e1.vhd");
+      I0 := Get_Identifier (DAda);
+      I1 := Get_Identifier (FAda);
       
       S := Files_Map.Load_Source_File(I0,I1);
       if S /= No_Source_File_Entry then
