@@ -50,13 +50,18 @@ package body libvhdltok is
         Ada.Text_IO'Elab_Spec;
         Ada.Text_IO'Elab_Body;
 	
+   end  Vhdltok_Init_Static;
+   
+   procedure Vhdltok_Init is
+   begin
+	
 	Str_Table.Initialize;
 	Files_Map.Initialize;
 	lists.Initialize;
 	Nodes.Initialize;
 	Std_Names.Std_Names_Initialize; -- Name_Table.Initialize;
 	
-   end  Vhdltok_Init_Static;
+   end  Vhdltok_Init;
    
    procedure Vhdltok_Scan is
       S : Source_File_Entry;

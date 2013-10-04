@@ -7,7 +7,7 @@ library project libvhdltok_shared is
        for Library_Name use "vhdltok";
        for Library_Auto_Init use "true";
        for Library_Interface use ("libvhdltok","Scan","Errorout", "Iirs","Lists","Nodes","Types","Tokens","Files_Map","Flags","Name_Table","Std_Names","Str_Table");
-       for Library_Standalone use "encapsulated";
+--       for Library_Standalone use "encapsulated";
        
        package Compiler is
             for Default_Switches ("Ada")
