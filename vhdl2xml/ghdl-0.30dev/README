@@ -1,0 +1,73 @@
+This is the README from the source distribution of GHDL.
+
+To get the binary distribution or more information, go to http://ghdl.free.fr
+
+Copyright:
+**********
+GHDL is copyright (c) 2002 - 2010 Tristan Gingold.
+See the GHDL manual for more details.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+
+Building GHDL from sources:
+***************************
+
+Required:
+* the sources of gcc-4.7.2 (at least the core part).
+  Note: other versions of gcc sources have not been tested.
+* the Ada95 GNAT compiler (GNAT GPL 2008 are known to work;
+  Ada compilers in most Linux distributions are more or less buggy)
+* GNU/Linux for ix86 (pc systems) (porting is necessary for other systems)
+
+Procedure:
+* Check your Ada compiler.  On some systems (or with some distribution), the
+  GNAT compiler seems broken.  Try this very simple example, using file
+  example.adb
+<<<<<<<<<<<<<<<<<<
+procedure Example is
+begin
+   null;
+end Example;
+<<<<<<<<<<<<<<<<<<
+  Compile with
+  $ gnatmake example
+  It should create an executable, 'example'.
+  If this doesn't work, your GNAT installation is broken.  It may be a PATH
+  problem or something else.
+* untar the gcc tarball
+* untar the ghdl tarball (this sould have been done, since you are reading a
+  file from it).
+* move or copy the vhdl directory of ghdl into the gcc subdirectory of
+  the gcc distribution.
+  You should have a gcc-4.7.2/gcc/vhdl directory.
+* configure gcc with the --enable-languages=vhdl option.  You may of course
+  add other languages.  Also you'd better to disable bootstraping using
+  --disable-bootstrap.
+  Refer to the gcc installation documentation.
+* compile gcc.
+  'make CFLAGS="-O"' is OK
+* install gcc.  This installs the ghdl driver too.
+  'make install' is OK.
+
+There is a mailing list for any questions.  You can subscribe via:
+  https://mail.gna.org/listinfo/ghdl-discuss/
+Please report bugs on https://gna.org/bugs/?group=ghdl
+
+If you cannot compile, please report the gcc version, GNAT version and gcc
+source version.
+
+Tristan Gingold.
