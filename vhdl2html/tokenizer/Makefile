@@ -17,7 +17,7 @@ lib-shared:
 	gnatmake -Plibvhdltok_shared.gpr -v
 
 test-shared: lib-shared
-	gcc -g test_shared.c -o lib/test.exe -Llib -lvhdltok 
+	gcc -g test_shared.c -o lib/test.exe -Llib -lvhdltok $(if $(findstring Darwin,$(shell uname)),,-lgnat)
 #-lgnat
 
 #	gnatmake -c libvhdltok.adb
