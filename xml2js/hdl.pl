@@ -228,6 +228,34 @@ sub getDecls {
     return grep { defined($_) } @_adecls;
 }
 
+sub getStmts {
+    my ($r,@astmts) = @_;
+    my @_astmts = ();
+    for (my $i = 0; $i < scalar(@astmts); $i++) {
+        my $a  = $astmts[$i];
+        my $a1 = $astmts[$i+1];
+        my ($decl1,$n1,$typ1,$cn1,$ret1);
+        my ($decl,$n,$typ,$cn,$ret)      = ($a, $a->nodeName, $a->getAttribute('typ'), $a->getAttribute('n'),undef); 
+           ($decl1,$n1,$typ1,$cn1,$ret1) = ($a1,$a1->nodeName,$a1->getAttribute('typ'),$a1->getAttribute('n'),undef) if ($a1) ; 
+        my @lr = ($a->nonBlankChildNodes());
+        
+        if ($n eq 'generate_statement') {
+            $ret = Hdl::Stmt::Generate::new({'_p'=>$r, '_xml'=>$a }); 
+        } elsif ($n eq 'concurrent_conditional_signal_assignment') {
+            $ret = Hdl::Stmt::ConcAssign::Sig::new({'_p'=>$r, '_xml'=>$a });
+        } elsif ($n eq 'sensitized_process_statement') {
+            # todo
+            
+        } elsif ($n eq 'component_instantiation_statement') {
+            $ret = Hdl::Stmt::ComponentInstance::new({'_p'=>$r, '_xml'=>$a }); 
+        } else {
+            confess("Cannot handle ".Hdl::dbgxml($a));
+        }
+        push (@_astmts,$ret);
+    }
+    return grep { defined($_) } @_astmts;
+}
+
 
 package Hdl::Namespace;
 use Carp;
@@ -1148,6 +1176,102 @@ sub new {
     my $v = $$r{val};
     return $r;
 }
+
+############ concurrent ############
+
+package Hdl::Stmt::Generate; use parent -norequire, 'Hdl::Stmt';
+use Data::Dumper; use Carp;
+
+sub decl {
+    my ($s) = @_;
+    my $r = {%$s};
+    return bless ($r, '::Hdl::Stmt::Generate::Decls') ;
+}
+
+#eval(my $js = ::convert_template('Hdl::Stmt::Generate::js', 
+#'/* generate {(n)} */
+#function _t_{.of.} (_p,_n,_g,_port) {
+#    hdl.obj(this,_p,_n);
+#    this._seq = {@decl,js@};
+#    this.elaborate = function() {
+#    }
+#}
+#'));
+
+sub new {
+    my ($r) = @_; my ($p,$xml) = ($$r{_p},$$r{_xml});
+    $r = Hdl::dobless ($r, 'Hdl::Stmt::Generate');
+    my $typ = $xml->getAttribute('typ');
+    my @chain = $xml->findnodes('./concurrent_statement_chain');
+    die ("Expect only one concurrent statment chain in ".Hdl::dbgxml($xml)) if (scalar(@chain) > 1);
+    my $c = $chain[0];
+    my @lr = ($xml->nonBlankChildNodes());
+    $r->{'_typ'} = $typ;
+    if ($typ eq 'if') {
+        die ("Expect if condiftional ".Hdl::dbgxml($xml)) if (scalar(@lr) < 1);
+        $r->{'_conditional'} = Hdl::Expr::new($r, $lr[0]);
+    } elsif ($typ eq 'for') {
+        die ("Expect for iterator ".Hdl::dbgxml($xml)) if (scalar(@lr) < 1);
+        $r->{'_conditional'} = Hdl::Expr::new($r, $lr[0]);
+    } else {
+        die ("Expect \"if\" or \"for\" in ".Hdl::dbgxml($xml)) if (!($typ eq 'if' || $typ eq 'for'));
+    }
+    if (defined($c)) {
+        my @dc = $c->findnodes('./*');
+        my @d = ::Hdl::getStmts($r,@dc);
+        $r->{'_stmts'} = [ @d ];
+    }
+    return $r;
+}
+
+package Hdl::Stmt::ComponentInstance; use parent -norequire, 'Hdl::Stmt';
+use Data::Dumper; use Carp;
+
+sub new {
+    my ($r) = @_; my ($p,$xml) = ($$r{_p},$$r{_xml});
+    $r = Hdl::dobless ($r, 'Hdl::Stmt::ComponentInstance');
+    my $typ = $xml->getAttribute('typ');
+    my @g = $xml->findnodes('./generic_map_aspect/association_chain');
+    my @p = $xml->findnodes('./port_map_aspect/association_chain');
+    die ("Expect one generic and one port ".Hdl::dbgxml($xml)) if (scalar(@g) > 1 || scalar(@p) > 1);
+    my $gen = $g[0];
+    my $prt = $p[0];
+    $r->{'_generics'} = [Hdl::Expr::Call::new_assoc($p,$gen)];
+    $r->{'_ports'}    = [Hdl::Expr::Call::new_assoc($p,$prt)];
+      
+    return $r;
+}
+
+package Hdl::Stmt::ConcAssign::Sig; use parent -norequire, 'Hdl::Stmt';
+use Data::Dumper; use Carp;
+
+sub new {
+    my ($r) = @_; my ($p,$xml) = ($$r{_p},$$r{_xml});
+    $r = Hdl::dobless ($r, 'Hdl::Stmt::ConcAssign::Sig');
+    
+    my @lr = ($xml->nonBlankChildNodes());
+    confess ("Expect 3 childs for sigassign ".Hdl::dbgxml($xml)) if (scalar(@lr) != 3);
+    #print (Hdl::dbgxml($xml));
+    $r->{'_left'}  = Hdl::Expr::new($r, $lr[0]);
+    my @e = $xml->findnodes('./waveform/waveelem');
+    confess("Cannot find right element".Hdl::dbgxml($xml)) if (scalar(@e) == 0);
+    my @ei = map {
+        my @er = ($_->nonBlankChildNodes());
+        my $w = bless({_p=>$r,_xml=>$_},'Hdl::Decl::Waveform');
+        confess("Cannot non-single right element(".scalar(@er)."):".Hdl::dbgxml($xml)) if (!(scalar(@er) == 1 || scalar(@er) == 2));
+        $$w{_elem} = Hdl::Expr::new($r, $er[0]);
+        if (scalar(@er) == 2) {
+            $$w{_delay} = Hdl::Expr::new($r, $er[1]);
+        }
+        $w
+    } @e;
+    $r->{'_right'} = [@ei];
+    my $v = $$r{val};
+    return $r;
+}
+
+############ expr ############
+
 
 package Hdl::Expr::Assign;
 use parent -norequire, 'Hdl::Expr';
@@ -2256,6 +2380,8 @@ function _t_arch_{.of.} (_p,_n,_g,_port) {
     this._ssig = {@declsig,js@};
     /* processes */
     this._prc = {@declprc,js@};
+    /* conc */
+    this._con = {@declcon,js@};
     
     this.elaborate = function() {
     }
@@ -2269,7 +2395,7 @@ sub declsig { my ($s) = @_; return bless ({ '_decls' => [ grep { $_->isa('Hdl::D
 sub declgen { my ($s) = @_; return bless ({ '_generics' => [ @{$$s{_entity}{_gen}}]},'::Hdl::Generic::Decls'); }
 sub declprt { my ($s) = @_; return bless ({ '_ports'    => [ @{$$s{_entity}{_prt}}]},'::Hdl::Port::Decls');; }
 sub declprc { my ($s) = @_; return grep { $_->isa('Hdl::Process') } @{$$s{_processes}};  }
-sub declcon { my ($s) = @_; return (); }
+sub declcon { my ($s) = @_; return @{$$s{_conc}};  }
 
 sub n { my ($s) = @_; return $s->{'n'}." of ".$s->{'of'}; }
 sub new {
@@ -2286,8 +2412,12 @@ sub new {
     my @aprocs = $arch->findnodes('./concurrent_statement_chain/sensitized_process_statement/process_statement');
     $$r{'_processes'} = [ map { Hdl::Process::new($r,$_); } @aprocs ];
     
-    #print(join(",\n",map { print ($_."\n"); $_->js } @{$$r{'_decls'}}));
+    my @generates = $arch->findnodes('./concurrent_statement_chain/*');
+    my @d = ::Hdl::getStmts($r,@generates);
+    $$r{'_conc'} = [@d];
     
+    
+    #print(join(",\n",map { print ($_."\n"); $_->js } @{$$r{'_decls'}}));
     
     confess("Need \"of\" to access entity ".$r->n) if (!length($r->{'of'}));
     my $e = $p->getSymbol($r->{'of'});
@@ -2316,6 +2446,12 @@ sub new {
             '::Hdl::PackageBody::Decls'        => [ 'decls', '.@_decls()' ],
             '::Hdl::Generic::Decls'            => [ 'decls', '.@_generics()' ],
             '::Hdl::Port::Decls'               => [ 'decls', '.@_ports()' ],
+
+            '::Hdl::Stmt::Generate::Decls'     => [ 'type',  "'Generate'", 'decls', '.@_stmts()', 'Conditional', '._conditional()' ],
+            '::Hdl::Stmt::ComponentInstance'   => [ 'type',  "'Component'", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
+
+            'Hdl::Stmt::Generate'              => [ 'type', "'Generate'", 'cond', '._typ', 'decls', '.@_stmts()', 'Conditional', '._conditional()' ],
+
 
             '::Hdl::Generic'                   => [ 'type' , "'Generic'", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()' ],
             
