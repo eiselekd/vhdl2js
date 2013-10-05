@@ -1,48 +1,3 @@
-use Data::Dumper;
-use Getopt::Long;
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
-use Cwd;
-use Cwd 'abs_path';
-
-Getopt::Long::Configure(qw(bundling));
-GetOptions(\%OPT,qw{
-d+
-quite|q+
-verbose|v+
-ast|a=s
-outfile|o=s
-log|e=s
-gensrc|g=s
-genlvl|l=i
-genn|n=s
-}, @g_more) or usave(\*STDERR);
-
-die ("AST not given usa the --ast=<file> switch") if (!defined($OPT{'ast'}));
-
-require "$Bin/hdltok.pl";
-
-$d = $OPT{'d'} || 0;
-
-$LOG=\*STDERR;
-$OUT=\*STDOUT;
-if (defined(my $of = $OPT{'outfile'})) {
-    open OUT, ">$of" or die $!;
-    $OUT=\*OUT;
-}
-if (defined(my $lf = $OPT{'log'})) {
-    open LOG, ">$lf" or die $!;
-    $LOG=\*LOG;
-}
-$OPT{'genlvl'} if (!defined($OPT{'genlvl'}));
-
-foreach $f (@ARGV) {
-    print("Processing file $f\n");
-    @lines = hdltokenize($f);
-    
-
-    
-}
 
 # Copyied from: JSON::Tiny
 
@@ -58,6 +13,7 @@ use warnings;
 use B;
 use Scalar::Util ();
 use Encode ();
+use Carp;
 
 sub new {
   my $class = shift;
@@ -127,11 +83,13 @@ sub decode {
   my $encoding = 'UTF-8';
   $bytes =~ $UTF_PATTERNS->{$_} and $encoding = $_ for keys %$UTF_PATTERNS;
 
+
   my $d_res = eval { $bytes = Encode::decode($encoding, $bytes, 1); 1 };
   $bytes = undef unless $d_res;
 
   # Object or array
-  my $res = eval {
+  my $res; 
+  {
     local $_ = $bytes;
 
     # Leading whitespace
@@ -139,6 +97,7 @@ sub decode {
 
     # Array
     my $ref;
+
     if (m/\G\[/gc) { $ref = _decode_array() }
 
     # Object
@@ -153,7 +112,7 @@ sub decode {
       _exception("Unexpected data after $got");
     }
 
-    $ref;
+    $res = $ref;
   };
 
   # Exception
@@ -206,15 +165,15 @@ sub _decode_object {
   until (m/\G$WHITESPACE_RE\}/gc) {
 
     # Quote
-    m/\G$WHITESPACE_RE"/gc
+    m/\G$WHITESPACE_RE([a-zA-Z0-9_]+)/gc
       or _exception('Expected string while parsing object');
 
     # Key
-    my $key = _decode_string();
-
+    my $key = $1; #_decode_string();
+    
     # Colon
-    m/\G$WHITESPACE_RE:/gc
-      or _exception('Expected colon while parsing object');
+    m/\G(?:$WHITESPACE_RE)?:/gc
+      or _exception('Expected colon while parsing object:'.substr($_,pos($_),32));
 
     # Value
     $hash{$key} = _decode_value();
@@ -233,14 +192,15 @@ sub _decode_object {
 }
 
 sub _decode_string {
+  my ($del) = @_; $del = '"' if (!$del);
   my $pos = pos;
   # Extract string with escaped characters
-  m!\G((?:(?:[^\x00-\x1f\\"]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4})){0,32766})*)!gc; # segfault under 5.8.x in t/20-mojo-json.t #83
+  m!\G((?:(?:[^\x00-\x1f\\$del]|\\(?:[$del\\/bfnrt]|u[0-9a-fA-F]{4})){0,32766})*)!gc; # segfault under 5.8.x in t/20-mojo-json.t #83
   my $str = $1;
 
   # Missing quote
-  unless (m/\G"/gc) {
-    _exception('Unexpected character or invalid escape while parsing string')
+  unless (m/\G$del/gc) {
+    _exception('Unexpected character or invalid escape while parsing string:'.substr($_,pos($_),32))
       if m/\G[\x00-\x1f\\]/;
     _exception('Unterminated string');
   }
@@ -282,7 +242,7 @@ sub _decode_string {
       $buffer .= pack 'U', $ord;
     }
   }
-
+  
   # The rest
   return $buffer . substr $str, pos($str), length($str);
 }
@@ -293,7 +253,7 @@ sub _decode_value {
   m/\G$WHITESPACE_RE/gc;
 
   # String
-  return _decode_string() if m/\G"/gc;
+  return _decode_string($1) if m/\G(["'])/gc;
 
   # Array
   return _decode_array() if m/\G\[/gc;
@@ -315,7 +275,7 @@ sub _decode_value {
   return undef if m/\Gnull/gc;  ## no critic (return)
 
   # Invalid data
-  _exception('Expected string, array, object, number, boolean or null');
+  _exception('Expected string, array, object, number, boolean or null:'.substr($_,pos($_),32));
 }
 
 sub _encode_array {
@@ -383,7 +343,7 @@ sub _exception {
     $context .= ' at line ' . @lines . ', offset ' . length(pop @lines || '');
   }
 
-  die "$context\n";
+  confess "$context\n";
 }
 
 # Emulate boolean type
@@ -398,3 +358,4 @@ use overload '0+' => sub { ${$_[0]} }, '""' => sub { ${$_[0]} }, fallback => 1;
 ## cperl-indent-level: 4
 ## indent-tabs-mode:nil
 ## End:
+
