@@ -67,7 +67,7 @@ dl.pl
             } else {
                 print ($::LOG "Found ar '$all'\n") if ($::d);
             }
-            $c .= "\$out .= join(\"$sep\", map { \$_->$fn(\@_) } \$self->$ar());\n";
+            $c .= "my \@_a = \$self->$ar(); \$out .=  (scalar(\@_a) ? join(\"$sep\", map { \$_->$fn(\@_) } \@_a) : \"undef\") ;\n";
         } elsif ($a =~ /^$RE_template_si/) { # {( obj,fn,... )}
             my ($all,$ar,$fn) = ($&,$1,$2); my $it;
             $a = substr($a,length($all));
