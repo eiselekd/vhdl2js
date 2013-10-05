@@ -2,7 +2,7 @@ Status: Planning
 
 # vhdl2js
 
-Convert VHDL to Javascript and execute evaluation stage.
+Convert VHDL to Javascript and execute elaboration stage.
 
 vhdl2js is a runtime for VHDL code translated to javascript.
 It implements the elaboration stage of VHDL, generating a instance hirarchy tree
