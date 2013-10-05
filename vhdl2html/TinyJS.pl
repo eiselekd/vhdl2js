@@ -169,7 +169,7 @@ sub _decode_object {
       or _exception('Expected string while parsing object');
 
     # Key
-    my $key = $1; #_decode_string();
+    my $key = $1; #_decode_string() ;
     
     # Colon
     m/\G(?:$WHITESPACE_RE)?:/gc
