@@ -2447,10 +2447,10 @@ sub new {
             '::Hdl::Generic::Decls'            => [ 'decls', '.@_generics()' ],
             '::Hdl::Port::Decls'               => [ 'decls', '.@_ports()' ],
 
-            '::Hdl::Stmt::Generate::Decls'     => [ 'type',  "'Generate'", 'decls', '.@_stmts()', 'Conditional', '._conditional()' ],
-            '::Hdl::Stmt::ComponentInstance'   => [ 'type',  "'Component'", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
+            '::Hdl::Stmt::Generate::Decls'     => [ 'type', "'Generate'", 'decls', '.@_stmts()', 'conditional', '._conditional()' ],
+            '::Hdl::Stmt::ComponentInstance'   => [ 'type', "'Component'", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
 
-            'Hdl::Stmt::Generate'              => [ 'type', "'Generate'", 'cond', '._typ', 'decls', '.@_stmts()', 'Conditional', '._conditional()' ],
+            'Hdl::Stmt::Generate'              => [ 'type', "'Generate'", 'cond', '._typ', 'decls', '.@_stmts()', 'conditional', '._conditional()' ],
 
 
             '::Hdl::Generic'                   => [ 'type' , "'Generic'", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()' ],
