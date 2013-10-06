@@ -6,15 +6,6 @@ $RE_string =                     qr{"((?:\\.|[^\\"])*)"};
 $RE_string_one =                 qr{'((?:\\.|[^\\'])*)'}; #"
 $c_id =                          qr{(?:[a-zA-Z_][a-zA-Z_0-9]*)};
 
-sub readfile {
-    my ($in) = @_;
-    usage(\*STDOUT) if (length($in) == 0) ;
-    open IN, "$in" or die "Reading \"$in\":".$!;
-    local $/ = undef;
-    $m = <IN>;
-    close IN;
-    return $m;
-}
 
 sub hdltokenize {
     my ($f) = @_; my @l = ();

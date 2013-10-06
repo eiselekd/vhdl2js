@@ -163,10 +163,12 @@ sub _decode_array {
 sub _decode_object {
   my %hash;
   until (m/\G$WHITESPACE_RE\}/gc) {
-
+      
+#      print ("----".substr($_,pos($_),32)."\n");
+      
     # Quote
     m/\G$WHITESPACE_RE([a-zA-Z0-9_]+)/gc
-      or _exception('Expected string while parsing object');
+      or _exception('Expected id while parsing object:'.substr($_,pos($_),32));
 
     # Key
     my $key = $1; #_decode_string() ;
@@ -177,7 +179,8 @@ sub _decode_object {
 
     # Value
     $hash{$key} = _decode_value();
-
+      #print("$key => ".$hash{$key}."\n");
+      
     # Separator
     redo if m/\G$WHITESPACE_RE,/gc;
 
@@ -185,7 +188,7 @@ sub _decode_object {
     last if m/\G$WHITESPACE_RE\}/gc;
 
     # Invalid character
-    _exception('Expected comma or right curly bracket while parsing object');
+    _exception('Expected comma or right curly bracket while parsing object'.substr($_,pos($_),32));
   }
 
   return \%hash;
@@ -251,6 +254,8 @@ sub _decode_value {
 
   # Leading whitespace
   m/\G$WHITESPACE_RE/gc;
+
+  #print ("+++".substr($_,pos($_),32)."\n");
 
   # String
   return _decode_string($1) if m/\G(["'])/gc;

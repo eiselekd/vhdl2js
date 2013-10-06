@@ -25,6 +25,9 @@ with GNAT.Directory_Operations;
 with Name_Table; use Name_Table;
 with Str_Table;
 with Ada.Calendar;
+with Files_Map; use Files_Map;
+with Ada.Containers.Vectors;
+with Errorout;
 
 package body Files_Map is
 
@@ -34,6 +37,16 @@ package body Files_Map is
 
    type Lines_Table_Type is array (Positive) of Source_Ptr;
    type Lines_Table_Ptr is access all Lines_Table_Type;
+
+   --  type Scan_Record is record
+   --     Loc : Location_Type;
+   --     Token: Token_Type;
+   --  end record;
+
+   --  package Scan_Container is new Vectors (Natural, Scan_Record);
+   package Scan_Vec is new Ada.Containers.Vectors
+     (Element_Type => Scan_Record, Index_Type => Natural);
+   type Scan_Vec_Acc is access Scan_Vec.Vector;
 
    --  Data associed with a file.
    type Source_File_Record is record
@@ -66,10 +79,13 @@ package body Files_Map is
       --  Cache.
       Cache_Line : Natural;
       Cache_Pos : Source_Ptr;
+      -- Scanned tokens
+      Tokens : Scan_Vec_Acc;
    end record;
 
    --  Next location to use.
    Next_Location : Location_Type := Location_Nil + 1;
+   subtype X is Xml_Node_Acc;
 
    package Source_Files is new GNAT.Table
      (Table_Index_Type => Source_File_Entry,
@@ -77,6 +93,34 @@ package body Files_Map is
       Table_Low_Bound => No_Source_File_Entry + 1,
       Table_Initial => 16,
       Table_Increment => 100);
+
+   procedure Push_Scan_Token(F : Source_File_Entry;
+                             T : Token_Type; L: Location_Type ) is
+      Source_File: Source_File_Record renames Source_Files.Table (F);
+      L0 : Scan_Record;
+   begin
+      L0.Loc := L;
+      L0.Token := T;
+      Scan_Vec.Append(Source_File.Tokens.all,L0);
+   end Push_Scan_Token;
+
+   function Get_Scan_Token(P:Xml_Node_Acc; F : Source_File_Entry )
+                           return Xml_Node_Acc is
+      Source_File: Source_File_Record renames Source_Files.Table (F);
+      R : X;
+      procedure Gen (AC : Scan_Vec.Cursor) is
+         A : constant Scan_Record := Scan_Vec.Element(AC);
+         E : X;
+      begin
+         E := X(Create_Xml_Node_Pretty(R,+"token"));
+         AddAttr(E,+"tok",+Token_Type'Image(A.Token));
+         AddAttr(E,+"loc",+Errorout.Get_Location_Str(A.Loc));
+      end Gen;
+   begin
+      R := X(Create_Xml_Node_Pretty(P,+"tokens"));
+      Source_File.Tokens.Iterate (Gen'Access);
+      return R;
+   end Get_Scan_Token;
 
    function Get_Last_Source_File_Entry return Source_File_Entry is
    begin
@@ -707,7 +751,8 @@ package body Files_Map is
                                    Lines_Table_Max => 0,
                                    Lines_Table => null,
                                    Cache_Pos => Source_Ptr_Org,
-                                   Cache_Line => 1);
+                                   Cache_Line => 1,
+                                   Tokens => new Scan_Vec.Vector);
       File_Add_Line_Number (Res, 1, Source_Ptr_Org);
       return Res;
    end Create_Source_File_Entry;

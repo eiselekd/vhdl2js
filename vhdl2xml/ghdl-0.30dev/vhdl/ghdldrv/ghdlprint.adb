@@ -1633,7 +1633,8 @@ package body Ghdlprint is
 
       Files : File_Data_Array;
       Unit : Iir;
-      Root,N : Xml_Node_Acc;
+      Root,N,Tok : Xml_Node_Acc;
+      pragma Unreferenced (Tok);
    begin
       --  Load work library.
       Setup_Libraries (True);
@@ -1669,7 +1670,7 @@ package body Ghdlprint is
 
       Root := Xml_Node_Acc(Create_Xml_Node_Pretty(null,+"root"));
       for F in Files'Range loop
-
+         Tok := Get_Scan_Token(Root,Files (F).Fe);
          Unit := Get_First_Design_Unit (Files (F).Design_File);
          while Unit /= Null_Iir loop
             N := NewN(Root,+"xml");

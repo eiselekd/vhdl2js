@@ -991,6 +991,8 @@ package body Scan is
    procedure Scan is
    begin
       if Current_Token /= Tok_Invalid then
+         Push_Scan_Token(Current_Context.Source_File,
+                         Current_Token, Get_Token_Location);
          Current_Context.Prev_Token := Current_Token;
       end if;
 

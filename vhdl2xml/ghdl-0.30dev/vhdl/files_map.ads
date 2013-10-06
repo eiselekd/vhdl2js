@@ -17,11 +17,18 @@
 --  02111-1307, USA.
 with Types; use Types;
 with System;
+with Tokens; use Tokens;
+with disp_xml_node; use disp_xml_node;
 
 package Files_Map is
 
    -- Source file handling
    -----------------------
+
+   procedure Push_Scan_Token(F : Source_File_Entry;
+                             T : Token_Type; L: Location_Type );
+   function Get_Scan_Token(P:Xml_Node_Acc;F : Source_File_Entry )
+                          return Xml_Node_Acc;
 
    --  Create the path from DIRECTORY and NAME:
    --  If NAME is an absolute pathname, then return NAME.
@@ -147,4 +154,10 @@ package Files_Map is
 
    --  Free all memory and reinitialize.
    procedure Initialize;
+
+   type Scan_Record is record
+      Loc : Location_Type;
+      Token: Token_Type;
+   end record;
+
 end Files_Map;
