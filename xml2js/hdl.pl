@@ -2555,35 +2555,68 @@ sub esc_str {
     return $s;
 }
 
+# convert js,perl string struct
 foreach my $k (keys (%mapping)) {
     my $v = $mapping{$k};
     if ((ref($v) eq "ARRAY"))  {
         my @c = ();
         my @v = @$v;
-        while (scalar(@v)) {
-            my $e0 = shift(@v);
-            my $v0 = shift(@v);
-            #print ($v0."\n");
-            if ($v0 =~ /^\.([_a-zA-Z0-9]+)\(\)$/) { # .a()
-                push(@c,"(defined(\$s->{$1}) ? (\"$e0:\". \$s->{$1}->js(\@_)) : undef)");
-            } elsif ($v0 =~ /^\.\@([_a-zA-Z0-9]+)\(\)$/) { # .@a()
-                push(@c,"(\"$e0: [\".join(\",\", grep { defined(\$_) } map {  \$_->js(\@_); } \@{\$\$s{$1}}).\"]\")");
-            } elsif ($v0 =~ /^\.([_a-zA-Z0-9]+)$/) { # .a
-                push(@c,"(defined(\$s->{$1}) ? (\"$e0:\\\"\". esc_str(\$s->{$1}).\"\\\"\") : undef)");
-            } elsif ($v0 =~ /^\["([_a-zA-Z0-9]+)"\]$/) { # ["a"]
-                push(@c,"(defined(\$s->{$1}) ? (\"$e0:[\".join(\",\", map { \"\\\"\". \$_.\"\\\"\" } \@{\$s->{$1}} ).\"]\" ) : undef)");
-            } else {
-                #$v0 =~ s/'/\\"/g;
-                push(@c,"(\"$e0: $v0\")");
+        foreach $lang ([':','js'],['=>','perl']) {
+            my ($s, $n) = @$lang;
+            while (scalar(@v)) {
+                my $e0 = shift(@v);
+                my $v0 = shift(@v);
+                if ($v0 =~ /^\.([_a-zA-Z0-9]+)\(\)$/) { # .a()
+                    push(@c,"(defined(\$s->{$1}) ? (\"$e0$s\". \$s->{$1}->$n(\@_)) : undef)");
+                } elsif ($v0 =~ /^\.\@([_a-zA-Z0-9]+)\(\)$/) { # .@a()
+                    push(@c,"(\"$e0$s [\".join(\",\", grep { defined(\$_) } map {  \$_->$n(\@_); } \@{\$\$s{$1}}).\"]\")");
+                } elsif ($v0 =~ /^\.([_a-zA-Z0-9]+)$/) { # .a
+                    push(@c,"(defined(\$s->{$1}) ? (\"$e0$s\\\"\". esc_str(\$s->{$1}).\"\\\"\") : undef)");
+                } elsif ($v0 =~ /^\["([_a-zA-Z0-9]+)"\]$/) { # ["a"]
+                    push(@c,"(defined(\$s->{$1}) ? (\"$e0${s}[\".join(\",\", map { \"\\\"\". \$_.\"\\\"\" } \@{\$s->{$1}} ).\"]\" ) : undef)");
+                } else {
+                    #$v0 =~ s/'/\\"/g;
+                    push(@c,"(\"$e0$s $v0\")");
+                }
             }
+            my $snippet = "sub ".$k."::${n}".' { my ($s) = shift(@_);return "{".join(",", grep { defined($_) } ('.join(",",@c).'))."}" };'."\n";
+            eval($snippet); if($@) { print "Error: $@ :  $snippet" }
         }
-        my $js = "sub ".$k.'::js { my ($s) = shift(@_);return "{".join(",", grep { defined($_) } ('.join(",",@c).'))."}" };'."\n";
-        #print $js;
-        eval($js);
     } else {
         eval(my $js = ::convert_template($k.'::js', $v));
     }
 }
+
+# convert internal perl struct
+foreach my $k (keys (%mapping)) {
+    my $v = $mapping{$k};
+    if ((ref($v) eq "ARRAY"))  {
+        my @c = ();
+        my @v = @$v;
+        my ($s, $n) = ('=>', 'data');
+        while (scalar(@v)) {
+            my $e0 = shift(@v);
+            my $v0 = shift(@v);
+            if ($v0 =~ /^\.([_a-zA-Z0-9]+)\(\)$/) { # .a()
+                push(@c,"(defined(\$s->{$1}) ? (\$\$_r{\"$e0\"} = \$s->{$1}->$n({},\@_)) : undef)");
+            } elsif ($v0 =~ /^\.\@([_a-zA-Z0-9]+)\(\)$/) { # .@a()
+                push(@c,"(\$\$_r{\"$e0\"} =  [ grep { defined(\$_) } map {  \$_->$n({},\@_); } \@{\$\$s{$1}} ])");
+            } elsif ($v0 =~ /^\.([_a-zA-Z0-9]+)$/) { # .a
+                push(@c,"(defined(\$s->{$1}) ? (\$\$_r{\"$e0\"} = (\$s->{$1})) : undef)");
+            } elsif ($v0 =~ /^\["([_a-zA-Z0-9]+)"\]$/) { # ["a"]
+                push(@c,"(defined(\$s->{$1}) ? (\$\$_r{\"$e0\"} = [ \@{\$s->{$1}} ]) : undef)");
+            } else {
+                #$v0 =~ s/'/\\"/g;
+                push(@c,"(\$\$_r{\"$e0\"} = $v0)");
+            }
+        }
+        my $snippet = "sub ".$k."::data".' { my ($s) = shift(@_);my ($_r) = shift(@_); '.join(";\n",@c)."; return \$_r; }\n";
+        eval($snippet); if($@) { die "Error: $@ : $snippet";  }
+    } else {
+        eval(my $js = ::convert_template($k.'::data', $v));
+    }
+}
+
 
 1;
 
