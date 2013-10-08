@@ -18,10 +18,13 @@ js: xml
 	# try to beautify
 	-js-beautify e1.vhd.js  > e1.vhd.b.js
 	-js-beautify top.vhd.js > top.vhd.b.js
+	# syntax check
+	-d8 e1.vhd.b.js 
+	-d8 top.vhd.b.js 
 
 html: js
-	perl ../vhdl2html/hdl2html.pl --ast=e1.vhd.b.js  -o e1.vhd.html  e1.vhd
-	perl ../vhdl2html/hdl2html.pl --ast=top.vhd.b.js -o top.vhd.html top.vhd
+#	perl ../vhdl2html/hdl2html.pl --ast=e1.vhd.b.js  -o e1.vhd.html  e1.vhd
+#	perl ../vhdl2html/hdl2html.pl --ast=top.vhd.b.js -o top.vhd.html top.vhd
 
 compile:
 	mkdir -p gnu/work

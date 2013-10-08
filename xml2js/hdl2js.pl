@@ -261,6 +261,8 @@ my @fln = ();
 $top = Hdl::Top::new(0,0);
 @packageb = ();
 @packaged = ();
+%loc2id = ();
+@filear = (); my @o = ();
 foreach $f (@ARGV) {
     my $p = XML::LibXML->new();
     my $d = $p->parse_file($f);
@@ -274,6 +276,7 @@ foreach $f (@ARGV) {
         my ($fn, $linenr, $colnr) = ($1,$2,$3);
         # print ($fn.":".$linenr.":".$colnr."\n");
         my $id = scalar(@tok);
+        $loc2id{$loc} = $id;
         my $e = {'fn' => $fn, 'ln' => $linenr, 'cn' => $colnr, 'tok' => $tok, 'id' => $id };
         $fln[$linenr] = [[-1]] if (!defined($fln[$linenr]));
         push(@{$fln[$linenr]}, [$id]);
@@ -281,9 +284,9 @@ foreach $f (@ARGV) {
         $files{$fn} = 1;
         $maxlinenr = $linenr < $maxlinenr ? $maxlinenr : $linenr;
     }
-    my @f = keys %files;
+    my @f = keys %files; 
     die ("Unknown filename ") if (scalar(@f) == 0);
-    my $f = shift @f;
+    my $f = shift @f; my $of = $f;
     my $fm = readfile($f);
     my @fm = split("\n",$fm); my $ln = 1;
     foreach $fm (@fm) {
@@ -300,16 +303,30 @@ foreach $f (@ARGV) {
         shift(@$l) if (!length($$l[0][1]));
         $ln++;
     }
+    my $o = ""; my @lc;
     for ($i = 0; $i <= $maxlinenr; $i++) {
-        my $f;
+        my $f; my @l;
         if (defined($f = $fln[$i])) {
             foreach my $l (@$f) {
-                print("[".$$l[1]."]");
+                print("[".$$l[1]."]") if ($::d);
+                push(@l,"{ id: ".$$l[0].", txt: \"".$$l[1]."\"}");
             }
-            print ("\n");
+            print ("\n") if ($::d);;
         }
+        push(@lc,"[".join(",",@l)."]");
     }
-    
+    push(@filear,$of);
+    $o .= "{ fn: \"$of\", lines: [".join(",",@lc)."]}";
+    push (@o,$o);
+    #print $o;
+}
+print $OUT  "files=[".join(",",@o)."];";
+
+
+
+foreach $f (@ARGV) {
+    my $p = XML::LibXML->new();
+    my $d = $p->parse_file($f);
     
     my @nodes = $d->findnodes('/root/xml_xml|/root/xml_vhdl');
     (scalar(@nodes) %2 == 0) or die("Uneven number of xml_xml,xml_vhdl nodes\n");

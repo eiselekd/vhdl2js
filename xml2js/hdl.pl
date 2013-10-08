@@ -9,7 +9,6 @@ use Cwd 'abs_path'; use Carp;
 require "$Bin/template.pl";
 if ((!$::OPT{'gensrc'}) &&
     (defined($::OPT{'genlvl'}) && ($::OPT{'genlvl'} != 0))) {
-#    require "$Bin/hdltrans.pl" if (-f "$Bin/hdltrans.pl");
 }
 
 $::idre = $id = qr'(?:[a-zA-Z_][a-zA-Z_0-9]*)';
@@ -17,31 +16,6 @@ $xpath = qr{(?:$id)};
 
 package Hdl;
 use Scalar::Util 'blessed'; use Carp;
-
-
-# @new_map = ('Hdl::Expr::Aggregate::new__undef2', 
-#             'Hdl::Expr::Aggregate::new__undef3');
-
-# %new_map  = (
-# 'Hdl::Expr::Aggregate::new__undef2' => <<'TYP2'
-#   (@c[1].tag=='subtype_indication' && @c[1].n) ?
-#     Hdl::Expr::SlicePos{_obj=Hdl::Expr::new(@c[0]),_pos=@c[1].n} :
-#     Hdl::Expr::Slice   {_obj=Hdl::Expr::new(@c[0]),_range=Hdl::Expr::new(@c[1])}
-# TYP2
-# ,'Hdl::Expr::Aggregate::new__undef3' => <<'TYP3'
-#   {{case
-#     (.tag == 'type_declaration' && @#./type_definition/record_type_definition == 1 ) ?:
-#       Hdl::Type::Array{_range=getrange(./arrrange[0])}
-#       ;;
-#     (.tag == 'type_declaration' && @#./type_definition/enumeration_type_definition == 1 ) ?:
-#       Hdl::Type::Enum{_vals=@./Enumeration[.n]}
-#       ;;
-#     (.tag == 'anonymous_type_declaration' && @#./type_definition/array_type_definition == 1 ||
-#      .tag == 'type_declaration'           && @#./type_definition/array_type_definition == 1) ?:
-#       ;;
-#   }}
-# TYP3
-# );
 
 sub gensrc {
     my ($out) = @_;
@@ -92,29 +66,6 @@ sub xmldump {
 sub n  { my ($s) = @_; return $s.$s->{n}; }
 sub tn { my ($s) = @_; $s->n(); }
 
-# {
-#     type: 'Program',
-#     body: [
-#         {
-#             type: 'VariableDeclaration',
-#             declarations: [
-#                 {
-#                     type: 'AssignmentExpression',
-#                     operator: =,
-#                     left: {
-#                         type: 'Identifier',
-#                         name: 'answer'
-#                     },
-#                     right: {
-#                         type: 'Literal',
-#                         value: 42
-#                     }
-#                 }
-#             ]
-#         }
-#     ]
-# }
-
 sub assert {
 };
 
@@ -143,6 +94,9 @@ sub importAttrs {
     my ($s) = @_;
     if (my $xml = $$s{'_xml'}) {
         foreach my $a ($xml->attributes()) { $$s{$a->nodeName} = $a->value; }
+    }
+    if (defined($$s{loc})) {
+        $$s{loc} = $::loc2id{$$s{loc}} if (defined ($::loc2id{$$s{loc}}));
     }
 }
 
@@ -1467,287 +1421,6 @@ sub getrange {
         confess("Cannot scan range ".Hdl::dbgxml($r));
 }
 
-# sub delspace { my ($m) = @_; $m =~ s/^\s+//s; $m; }
-# sub dbgstr   { my ($m,$l) = @_; $m =~ s/\n/\\n/g; return substr($m, 0, $l).(length($m)>$l?"...":""); }
-# sub ident    { my ($ctx) = @_; my $r = ""; for (my $i = 0; $i < $$ctx{'i'}; $i++) { $r .= " "; }; return $r; }
-# $RE_string =     qr{"((?:\\.|[^\\"])*)"};
-# $RE_string_one = qr{'((?:\\.|[^\\'])*)'}; #"
-
-# sub parse_token {
-#     my ($m,$c) = @_; $m = delspace($m); $ctx = {} if (!defined($ctx));
-#     my %ctx = {%$ctx}; my $post = 0, $tag = 0; my $dobless="";
-#     ($m = substr($m,length($&)),$ctx{'local'} = 1) if ($m =~ /^\s*\./);
-#     ($m = substr($m,length($&)),$ctx{'ar'} = 1) if ($m =~ /^\s*@/);
-#     if ($m =~ /^\.($::id)/) {
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=>'attr', 'id'=>$1 );      # .attr
-#         print (ident($c)."Got Attr\n");
-#     } elsif ($m =~ /^([0-9]+)/  ) {
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=>'num', 'n'=>$1, 'id'=>$1 );# num
-#         print (ident($c)."Got Num\n"); $dobless = "Id";
-#     } elsif ($m =~ /^$RE_string/ || $m =~ /^$RE_string_one/ ) {
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=>'str', 'n'=>$1, 'id'=>$1 );# num
-#         print (ident($c)."Got Num\n"); $dobless = "Id";
-#     } elsif ($m =~ /^(\?:|;;|\|\||&&|==|\?|:|=|,)/) {
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=>'tok',  'tok'=>$1, 'id'=>$1 );;    # tokens
-#         print (ident($c)."Got Tokens '$1'\n"); $dobless = "Id";
-#     } elsif ($ctx{'ar'} && $m =~ /^\#/) { 
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=>'arsz' );                # array size
-#         print (ident($c)."Got Arraysize\n");
-#     } elsif ($m =~ /^\.((?:\/$::id)+)/) { 
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=> 'xpath', 'path'=>$& );  # xpath: ./...
-#         print (ident($c)."Got XPath '$&'\n");
-#     } elsif ($m =~ /^($::id(?:::$::id)*)/) { 
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=> 'class', 'id' => $& );  # class: a::b
-#         $dobless = "Id";
-#         print (ident($c)."Got Class '$&'\n");
-#     } elsif ($m =~ /^@($::id)\[/) { 
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=> 'map', 'n' => $1 );     # map array: @c[<op>]
-#         print (ident($c)."Got Maparray\n");
-#     } elsif ($m =~ /^@($::id)\[([0-9]+)\]/) { 
-#         $m = substr($m,length($&)); %ctx = ( %ctx, 'typ'=> 'idx', 'n' => $1 );     # index: @c[idx]
-#         print (ident($c)."Got Index\n");
-#     } elsif ($m =~ /^(\{\{|\{|\(|\[)/) {    
-#         $m = substr($m,length($&));                                                # open bracket
-#         my $mat = $1, $op, $cl; my %m = ('{'=>'}','{{'=>'}}','['=>']','('=>')'); 
-#         $op = $mat; $cl = $m{$mat};
-#         my $o = 1, $l = "";
-#         while (length($m)) {
-#             if (substr($m,0,length($op)) eq $op) {
-#                 $l .= $op; $m = substr($m,length($op));
-#                 $o++;
-#             } elsif (substr($m,0,length($cl)) eq $cl) {
-#                 $m = substr($m,length($cl));
-#                 if (--$o == 0) {
-#                     last;
-#                 }
-#                 $l .= $cl; 
-#             } elsif ($m =~ /^\s*$RE_string/ || $m =~ /^\*$RE_string_one/) {
-#                 $l .= $&; $m = substr($m,length($&));
-#             } else {
-#                 $l .= substr($m,0,1);; $m = substr($m,1);
-#             }
-#         }
-#         %ctx = ( %ctx, 'typ'=> $mat, 'b' => $l );
-#         print (ident($c)."Got Bracket '$op $cl':'".dbgstr($l,256)."'\n");
-#     } else {
-#         confess("Error: '$m'\n");
-#     }
-#     if ($post || $ctx{'ar'}) {
-#         if ($m =~ /^\s*\[/) {
-#             ($m,$p) = parse_token($m,$c);
-#             $ctx{'post'} = $p;
-#         }
-#     }
-#     if ($tag || $ctx{'ar'}) {
-#         if ($m =~ /^\s*\.([a-zA-Z0-9_]+)/) {
-#             $m = substr($m,length($&));
-#             $ctx{'tag'} = $1;
-#         }
-#     }
-#     my $c = {%ctx};
-#     if (length($dobless)) {
-#         $c = bless($c,$dobless);
-#     }
-#     return (delspace($m), $c);
-# }
-
-# # ..=@./AggE[ do a map on ./AggE and create []
-# # ..=[  create []
-# # {{switch ()?: ...;; ... }}
-# # Class::E{_val=...,_n=...}
-
-# sub parse_trans_ent {
-#     my ($m,$c,$list) = @_; my ($t,$t1,$t2,$t3,$t4);my (@a,@a1,@a2,@a3,@a4,@r); my ($b1,$ctr,$cfl);
-#     my $ctx; my $ctx1; my $ctx2; my $ctx3; my $ctx4; my $b2;
-#     while (length($m = delspace($m))) {
-#         ($m,$ctx) = parse_token($m,$c);
-#         if ($$ctx{'typ'} eq 'arsz' ) {
-#             ($m,$ctx2) = parse_trans_ent($m,{%$ctx,'i'=>($$ctx{'i'}+1)},0);
-#             $$ctx{'of'} = $ctx2;
-#             $ctx = bless($ctx,'Arsz');
-#             push(@r,$ctx);
-#         } elsif ($$ctx{'typ'} eq 'xpath' && defined($$ctx{'post'}) && $$ctx{'ar'}) {
-#             confess("Expect bracket as post") if (!length($b1 = $$ctx{'post'}{'b'}));
-#             $$ctx{'map'} = parse_trans_ent($$ctx{'post'}{'b'},{%$ctx,'i'=>($$ctx{'i'}+1)},1);
-#             return ($m,bless($ctx,'Arr::Xpath'));
-#         } elsif($$ctx{'typ'} eq 'class') {
-#             if ($$ctx{'ar'} && defined($$ctx{'post'})) {
-#                 $$ctx{'idx'} = parse_trans_ent($$ctx{'post'}{'b'},{%$ctx,'i'=>($$ctx{'i'}+1)},1);
-#             }
-#             if ($m =~ /^\s*\{/) {                               #obj-create: class{}
-#                 confess("Error: Expect classgen at start (".scalar(@r).")\n") if (scalar(@r));
-#                 ($m,$ctx1) = parse_token($m,$c); my $b1 = $$ctx1{'b'};
-#                 confess("Expect bracket: '$$ctx1{'typ'}'\n") if ($$ctx1{'typ'} ne '{');
-#                 my @m = ();
-#                 while (length($b1 = delspace($b1))) {
-#                     ($b1,$ctx2) = parse_token($b1,$c); confess("Expect id:") if (!length($$ctx2{'id'}));
-#                     ($b1,$ctx3) = parse_token($b1,$c); confess("Expect =:") if ($$ctx3{'tok'} ne "=");
-#                     ($b1,$ctx4) = parse_trans_ent($b1,{%$c,'i'=>($$c{'i'}+1)},0);
-#                     $b1 =~ s/^\s*,//;
-#                     push(@m, bless({'n'=>$ctx2, 'v'=>$ctx4},'Obj::Member'));
-#                 }
-#                 $$ctx{'m'}=[@m];
-#                 print("Return 'Obj'\n");
-#                 return ($m,bless($ctx,'Obj'));
-#             } elsif ($m =~ /^\s*\(/) {                          #obj-new: class()
-#                 confess("Error: Expect classgen at start (".scalar(@r).")\n") if (scalar(@r));
-#                 ($m,$ctx1) = parse_token($m,$c); my $b1 = $$ctx1{'b'};
-#                 confess("Expect bracket: '$$ctx1{'typ'}'\n") if ($$ctx1{'typ'} ne '(');
-#                 ($b1,$ctx2) = parse_trans_ent($b1,{%$c,'i'=>($$c{'i'}+1)},1);
-#                 $$ctx{'args'} = $ctx2;
-#                 return ($m,bless($ctx,'New'));
-#             }
-#             push(@r,$ctx);
-#         } elsif($$ctx{'typ'} eq '(' && length($b1 = $$ctx{'b'}) && $m =~ s/^\s*\?(?!:)// ) { # ? .. : ...
-#             $$ctx{'cond'} = parse_trans_ent($b1,{%$c,'i'=>($$c{'i'}+1)},1);
-#             ($m,$ctr) = parse_trans_ent($m,{%$c,'i'=>($$c{'i'}+1)},1);
-#             ($m,$ctx2) = parse_token($m,$c); confess("Expect ':' : ") if ($$ctx2{'tok'} != ':');
-#             ($m,$cfl) = parse_trans_ent($m,{%$c,'i'=>($$c{'i'}+1)},1);
-#             print("Return 'Ifthenelse'\n");
-#             $$ctx{'true'} = $ctr;
-#             $$ctx{'false'} = $cfl;
-#             return ($m,bless($ctx,'Ifthenelse'));
-#         } elsif($$ctx{'typ'} eq '{{' && length($b1 = $$ctx{'b'})) { # ?: ...
-#             if ($b1 =~ s/^\s*case//) {
-#                 my @r1 = ();
-#                 while (length($b1 = delspace($b1))) {
-#                     print("Cases $b1\n");
-#                     print Dumper($ctx1);
-#                     ($b1,$ctx1) = parse_token($b1,{%$c,'i'=>($$c{'i'}+1)},0); my @r = ();
-#                     confess("Expect '(' : ".Dumper($ctx1).$$ctx1{'tok'}) if ($$ctx1{'typ'} ne '(');
-#                     $b1 = $$ctx1{'b'};
-#                     ($b1,$ctx2) = parse_token($b1,$c); confess("Expect ':' : ") if ($$ctx2{'tok'} != '?:');
-                    
-#                     ($b2,$ctx1) = parse_trans_ent($$ctx1{'b'},{%$c,'i'=>($$c{'i'}+1)},1);
-                    
-#                     print ("--Parse:".$$ctx1{'typ'}{'b'});
-                    
-#                     while (length($b1 = delspace($b1)) && !($b1 =~ s/^\s*;;//)) {
-#                         ($b1,$ctx) = parse_trans_ent($b1,{%$c,'i'=>($$c{'i'}+1)},1);
-#                         push(@r,$ctx);
-#                         $b1 =~ s/^\s*;(?!;)//;
-#                     }
-#                     push(@r1, bless({'cond'=>$ctx1, 'stmts'=>[@r]},'Case'));
-#                 }
-#                 $$ctx{'cases'} = [@r1];
-#                 return ($m,bless($ctx,'Cases'));
-#             } else {
-#                 confess("unknown '{{'");
-#             }
-#         } else {
-#             push(@r,$ctx);
-#         }
-        
-#         if (!$list  || $b1 =~ s/^\s*,//) {
-#             last;
-#         }
-#     }
-#     return (delspace($m),bless({'l'=>[@r]},'Expr'));
-# }
-
-# my $enter_map='my ($s,$p,$xml) = ($_,$r,$_); my $r; my @c = $s->nonBlankChildNodes();';
-
-# sub dump_ast_attr {
-#     my ($ast,$ctx) = @_; my $r = "";
-#     if (blessed($ast) eq 'Expr' && scalar(@{$$ast{'l'}}) == 1 && $$ast{'l'}[0]{'typ'} eq 'class') {
-#         return dump_ast_attr($$ast{'l'}[0],$ctx);
-#     } elsif ($$ast{'typ'} eq 'class' && !($$ast{'id'} =~ /:/) &&
-#              !defined($$ast{'tag'}) && !defined($$ast{'idx'}) ) {
-#         return '$s->getAttribute(\''.$$ast{'id'}.'\')';
-#     } else {
-#         return dump_ast($ast,$ctx);
-#     }
-# }
-
-# sub dump_ast {
-#     my ($ast,$ctx) = @_; my $r = "";
-#     if (blessed($ast) eq 'Obj') {
-#         my $c = $$ast{'id'};
-#         $r .= ident($ctx)."\$r = Hdl::dobless({_p=>\$p, _xml=>\$xml},'$c');\n";
-#         $r .= join("\n", map { ident($ctx).'$$r{'.dump_ast($$_{'n'},$ctx)."}=".dump_ast_attr($$_{'v'},{%$ctx,'i'=>($$ctx{'i'}+1)}).";" } @{$$ast{'m'}});
-#     } elsif (blessed($ast) eq 'New') {
-#         my $c = $$ast{'id'};
-#         $r .= $c."(\$p,".dump_ast($$ast{args},$ctx).")";
-#     } elsif (blessed($ast) eq 'Id') {
-#         $r .= "'" if ($$ast{'typ'} eq 'str');
-#         $r .= ($$ast{'ar'} ? ($$ast{'post'} ? '$' : '@') : '').$$ast{'id'};
-#         $r .= "'" if ($$ast{'typ'} eq 'str');
-#     } elsif (blessed($ast) eq 'Arr::Xpath') {
-#         return "[\n".ident($ctx)."map { $enter_map\n".dump_ast($$ast{'map'},{%$ctx,'i'=>($$ctx{'i'}+1)})."\n".ident($ctx)."\$r } \$xml->findnodes(\"".$$ast{'path'}."\")\n".ident($ctx)."]";
-#     } elsif (blessed($ast) eq 'Ifthenelse') {
-#         return ident($ctx)."if (".dump_ast($$ast{'cond'},$ctx).") {\n".dump_ast($$ast{'true'},{%$ctx,'i'=>($$ctx{'i'}+1)})."\n".ident($ctx)."} else {\n".dump_ast($$ast{'false'},{%$ctx,'i'=>($$ctx{'i'}+1)})."\n".ident($ctx)."}";
-#     } elsif (blessed($ast) eq 'Expr') {
-#         my @l = @{$$ast{'l'}}; my $i;
-#         for ($i = 0; $i < scalar(@l); $i++) {
-#             if ($l[$i]{'typ'} eq 'tok' && $l[$i]{'id'} eq '==' &&
-#                 $l[$i+1]{'typ'} eq 'str') {
-#                 $r .= " eq ";
-#             } else {
-#                 $r .= " ".dump_ast($l[$i],{%$ctx,'i'=>($$ctx{'i'}+1)});
-#             }
-#         }
-#         return $r;
-# #join(" ",map { dump_ast($_,$ctx) } @{$$ast{'l'}});
-#     } elsif (blessed($ast) eq 'Cases') {#
-        
-#         for (my $i = 0; $i < scalar(@{$$ast{'cases'}}); $i++) {
-#             my $a = $$ast{'cases'}[$i];
-#             print Dumper($$a{'cond'});
-#             $r .= "(".dump_ast($$a{'cond'},{%$ctx,'i'=>($$ctx{'i'}+1)}).")";
-#         }
-#         return $r;
-        
-#         return join("\n",map { dump_ast($_,{%$ctx,'i'=>($$ctx{'i'}+1)}).";;" } @{$$ast{'cases'}});
-#     } elsif (blessed($ast) eq 'Arsz') {#
-#         return "scalar(\@".dump_ast($$ast{'of'},{%$ctx}).")";
-#     }
-#     if (defined($$ast{'idx'})) {
-#         $r .= "[".dump_ast($$ast{'idx'},{%$ctx})."]";
-#     }
-#     if (defined($$ast{'tag'})) {
-#         $r .= "->getAttribute('".$$ast{'tag'}."')";
-#     }    
-#     return $r;
-# }
-
-# %new_map  = (
-# #'Hdl::Expr::Aggregate::new__undef' => <<'TYP1'
-# #  Hdl::Expr::Aggregate{_entries=@./AggE[(.@#c==1)?
-# #    Hdl::Expr::Aggregate::E{_val=Hdl::Expr::new(.@c[0])}:
-# #    Hdl::Expr::Aggregate::E{_val=Hdl::Expr::new(.@c[1]),_tags=Hdl::Expr::new_choices(.@c[0])}]}
-# #TYP1
-# #,
-# #'Hdl::Expr::Aggregate::new__undef2' => <<'TYP2'
-# #  (@c[1].tag=='subtype_indication' && @c[1].n) ?
-# #    Hdl::Expr::SlicePos{_obj=Hdl::Expr::new(@c[0]),_pos=@c[1].n} :
-# #    Hdl::Expr::Slice   {_obj=Hdl::Expr::new(@c[0]),_range=Hdl::Expr::new(@c[1])}
-# #TYP2
-# #,
-
-# 'Hdl::Expr::Aggregate::new__undef3' => <<'TYP3'
-#   {{case
-#     (.tag == 'type_declaration' && @#./type_definition/record_type_definition == 1 ) ?:
-#       ;;
-#     (.tag == 'anonymous_type_declaration' && @#./type_definition/array_type_definition == 1 ||
-#      .tag == 'type_declaration'           && @#./type_definition/array_type_definition == 1)  ?:
-#       ;;
-#   }}
-# TYP3
-            
-# );
-
-# foreach my $k (keys %new_map) {
-#     my $m = $new_map{$k}; my $ast;
-#     ($m,$ast) = parse_trans_ent($m,{'i'=>0},0);
-#     my $e = dump_ast($ast,{i=>1});
-#     my $f = "sub $k { my (\$o) = (shift(\@_)); my (\$p,\$xml) = (\$\$o{_p},\$\$o{_xml}); my \$s = \$xml;
-#  my \@c = \$s->nonBlankChildNodes();
-# $e\n return \$r;\n}\n";
-#     print $f;
-#     #print (eval ($f));
-# }
-
-
 # {{case
 #  (.tag == 'type_declaration' && @#./type_definition/record_type_definition == 1) ?:
 #   ;; 
@@ -2373,15 +2046,15 @@ function _t_arch_{.of.} (_p,_n,_g,_port) {
     this._prt = {@declprt,js@};
     
     /* types */
-    this._typ = {@decltyp,js@};
+    this._typ =  [{@decltyp,js,","@}];
     /* subs */
-    this._sub = {@declsub,js@};
+    this._sub =  [{@declsub,js,","@}];
     /* signals */
-    this._ssig = {@declsig,js@};
+    this._ssig = [{@declsig,js,","@}];
     /* processes */
-    this._prc = {@declprc,js@};
+    this._prc =  [{@declprc,js,","@}];
     /* conc */
-    this._con = {@declcon,js@};
+    this._con =  [{@declcon,js,","@}];
     
     this.elaborate = function() {
     }
@@ -2616,7 +2289,6 @@ foreach my $k (keys (%mapping)) {
         eval(my $js = ::convert_template($k.'::data', $v));
     }
 }
-
 
 1;
 
