@@ -23,6 +23,7 @@ with Files_Map; use Files_Map;
 with Std_Names;
 with Str_Table;
 with Flags; use Flags;
+--with Ada.Text_IO; use Ada.Text_IO;
 
 package body Scan is
 
@@ -990,11 +991,12 @@ package body Scan is
    -- Get a new token.
    procedure Scan is
    begin
+      --Put_Line(Token_Type'Image(Current_Token));
       if Current_Token /= Tok_Invalid then
-         Push_Scan_Token(Current_Context.Source_File,
-                         Current_Token, Get_Token_Location);
          Current_Context.Prev_Token := Current_Token;
       end if;
+      Push_Scan_Token(Current_Context.Source_File,
+                         Current_Token, Get_Token_Location);
 
       << Again >> null;
 
