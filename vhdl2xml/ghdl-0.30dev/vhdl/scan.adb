@@ -189,6 +189,8 @@ package body Scan is
    procedure Invalidate_Current_Token is
    begin
       if Current_Token /= Tok_Invalid then
+         Push_Scan_Token(Current_Context.Source_File,
+                         Current_Token, Get_Token_Location);
          Current_Context.Prev_Token := Current_Token;
          Current_Token := Tok_Invalid;
       end if;
@@ -993,10 +995,10 @@ package body Scan is
    begin
       --Put_Line(Token_Type'Image(Current_Token));
       if Current_Token /= Tok_Invalid then
+         Push_Scan_Token(Current_Context.Source_File,
+                         Current_Token, Get_Token_Location);
          Current_Context.Prev_Token := Current_Token;
       end if;
-      Push_Scan_Token(Current_Context.Source_File,
-                         Current_Token, Get_Token_Location);
 
       << Again >> null;
 
