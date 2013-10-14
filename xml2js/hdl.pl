@@ -14,6 +14,13 @@ if ((!$::OPT{'gensrc'}) &&
 $::idre = $id = qr'(?:[a-zA-Z_][a-zA-Z_0-9]*)';
 $xpath = qr{(?:$id)};
 
+sub rmspace {
+    my ($s) = @_;
+    $s =~ s/^\s+//g;
+    $s =~ s/\s+$//g;
+    return $s;
+}
+
 package Hdl;
 use Scalar::Util 'blessed'; use Carp;
 
@@ -694,11 +701,13 @@ TYP1
 
 
 
+
 package Hdl::Expr::Range;       use parent -norequire, 'Hdl::Expr'; use Data::Dumper; use Carp;
 sub new {
     my ($r) = @_; my ($p,$xml) = ($$r{_p},$$r{_xml});
     $r = Hdl::dobless ($r, 'Hdl::Expr::Range');
     my $v = $$r{val};
+
     my @lr = ($xml->nonBlankChildNodes());
     if ($$r{typ} eq "'range") {
         $$r{'_obj'}   = Hdl::Expr::new($r, $lr[0]);
@@ -711,6 +720,10 @@ sub new {
     $r->{'_left'}   = Hdl::Expr::new($r, $lr[0]);
     $r->{'_right'}  = Hdl::Expr::new($r, $lr[1]);
     
+    $r->{'dir'} = ::rmspace($r->{'dir'});
+    
+    #print $r->{'dir'};# = "to";
+
     #confess("Cannot find variable name \"$v\"".Hdl::dbgxml($$r{_xml})) if (!defined($$r{_p}->getSymbol($v)));
     return $r;
 }
@@ -1396,7 +1409,7 @@ sub getrange {
         my $re = Hdl::Expr::new($p,$lr[1],$p->getIntTyp());
         my $dir = $r->getAttribute('dir');
         printf("From ".$le->n." $dir ".$re->n."\n") if ($::d);
-        return bless({('_p'=>$p, '_xml'=>$r, _left=>$le, _right=>$re, _dir=>$dir)}, '::Hdl::Expr::Range');
+        return bless({('_p'=>$p, '_xml'=>$r, _left=>$le, _right=>$re, _dir=>::rmspace($dir))}, '::Hdl::Expr::Range');
     };
     my @r = $r->findnodes('./subtype_indication/array_element_constraint/arrrange');
     if (scalar(@r)) {
@@ -1859,13 +1872,14 @@ sub new {
     confess ("Expect type/val\n".::Hdl::dbgxml($xml)) if (!(scalar(@lr) == 1 || scalar(@lr) == 2));
 
     $$r{_typ} = Hdl::Type::new($r,'type',$lr[0]);
+    $$r{_init} = Hdl::Expr::new($r,$lr[1]) if (scalar(@lr) >= 2);
 
     $p->setSymbol($r->{n},$r) if (length($r->{n}));
     return $r;
 }
 
 package Hdl::Decl::Var;
-use parent -norequire, 'Hdl'; use Carp;
+use parent -norequire, 'Hdl', 'Hdl::Namespace'; use Carp;
 
 sub new {
     my ($p,$xml) = @_; my $arch = $xml;
@@ -1873,6 +1887,10 @@ sub new {
     $r = Hdl::dobless ($r, 'Hdl::Decl::Var');
     my @lr = ($xml->nonBlankChildNodes());
     confess ("Expect type/val\n".::Hdl::dbgxml($xml)) if (!(scalar(@lr) == 1 || scalar(@lr) == 2));
+
+    $$r{_typ} = Hdl::Type::new($r,'type',$lr[0]);
+    $$r{_init} = Hdl::Expr::new($r,$lr[1]) if (scalar(@lr) >= 2);
+
     $p->setSymbol($r->{n},$r) if (length($r->{n}));
     return $r;
 }
@@ -1913,18 +1931,18 @@ sub new {
     my ($p,$xml) = @_; my $pck = $xml;
     my $r = {'_p'=>$p, '_xml'=>$xml };
     $r = Hdl::dobless ($r, 'Hdl::PackageDecl');
-    $$r{'_decls'} = bless ({ '_decls' => [  ::Hdl::getDecls($r,$pck->findnodes('./declaration_chain/*')) ]},'::Hdl::PackageDecl::Decls');
+    $$r{'_decls'} =  [  ::Hdl::getDecls($r,$pck->findnodes('./declaration_chain/*')) ];
     return $r;
 }
 
-eval(my $js = ::convert_template('Hdl::PackageDecl::js',  
-'/* package decl {.n.} */
-function _t_pdecl_{.of.} (_p,_n,_g,_port) {
-    _pdecl_d = {(_decls,js:"{}")};
-    this.elaborate = function() {
-    }
-}
-'));
+# eval(my $js = ::convert_template('Hdl::PackageDecl::js',  
+# '/* package decl {.n.} */
+# function _t_pdecl_{.of.} (_p,_n,_g,_port) {
+#     _pdecl_d = {(_decls,js:"{}")};
+#     this.elaborate = function() {
+#     }
+# }
+# '));
 #print $js;
 
 package Hdl::PackageBody;
@@ -1933,18 +1951,18 @@ sub new {
     my ($p,$xml) = @_; my $pck = $xml;
     my $r = {'_p'=>$p, '_xml'=>$xml };
     $r = Hdl::dobless ($r, 'Hdl::PackageBody');
-    $$r{'_decls'} = bless ({ '_decls' => [  ::Hdl::getDecls($r,$pck->findnodes('./declaration_chain/*')) ]},'::Hdl::PackageBody::Decls');
+    $$r{'_decls'} =  [  ::Hdl::getDecls($r,$pck->findnodes('./declaration_chain/*')) ] ;
     return $r;
 }
 
-eval(my $js = ::convert_template('Hdl::PackageBody::js',  
-'/* Package body {.n.} */
-function _t_pbody_{.n.} (_p,_n,_g,_port) {
-    _pbody_d = {(_decls,js:"{}")};
-    this.elaborate = function() {
-    }
-}
-'));
+#eval(my $js = ::convert_template('Hdl::PackageBody::js',  
+#'/* Package body {.n.} */
+#function _t_pbody_{.n.} (_p,_n,_g,_port) {
+#    _pbody_d = {(_decls,js:"{}")};
+#    this.elaborate = function() {
+#    }
+#}
+#'));
 #print $js;
 
 ############## Entity #################
@@ -1952,20 +1970,20 @@ package Hdl::Attribute; use parent -norequire, 'Hdl', 'Hdl::Namespace'; use Carp
 package Hdl::Component; use parent -norequire, 'Hdl', 'Hdl::Namespace'; use Carp;
 package Hdl::Entity;    use parent -norequire, 'Hdl', 'Hdl::Namespace'; use Carp;
 
-eval(my $js = ::convert_template('Hdl::Entity::js', 
-'
-/* entity {.n.} */
-function _t_entity_{.n.} (_p,_n,_g,_port) {
-    hdl.obj(this,_p,_n);
-    /* generic */
-    this._gen = {@declgen,js@};
-    /* port */
-    this._prt = {@declprt,js@};
+# eval(my $js = ::convert_template('Hdl::Entity::js', 
+# '
+# /* entity {.n.} */
+# function _t_entity_{.n.} (_p,_n,_g,_port) {
+#     hdl.obj(this,_p,_n);
+#     /* generic */
+#     this._gen = {@declgen,js@};
+#     /* port */
+#     this._prt = {@declprt,js@};
     
-    this.elaborate = function() {
-    }
-}
-'));
+#     this.elaborate = function() {
+#     }
+# }
+# '));
 
 sub declgen { my ($s) = @_; return bless ({ '_generics' => [ @{$$s{_gen}}]},'::Hdl::Generic::Decls'); }
 sub declprt { my ($s) = @_; return bless ({ '_ports'    => [ @{$$s{_prt}}]},'::Hdl::Port::Decls');; }
@@ -2000,15 +2018,15 @@ use parent -norequire, 'Hdl', 'Hdl::Namespace'; use Carp;
 #{(decltyp)}
 #    v = {@ declseq,js @}
 
-eval(my $js = ::convert_template('Hdl::Process::js', 
-'/* process {(n)} */
-function _t_{.of.} (_p,_n,_g,_port) {
-    hdl.obj(this,_p,_n);
-    this._seq = {@declseq,js@};
-    this.elaborate = function() {
-    }
-}
-'));
+#eval(my $js = ::convert_template('Hdl::Process::js', 
+#'/* process {(n)} */
+#function _t_{.of.} (_p,_n,_g,_port) {
+#    hdl.obj(this,_p,_n);
+#    this._seq = {@declseq,js@};
+#    this.elaborate = function() {
+#    }
+#}
+#'));
 
 sub declseq { my ($s) = @_; return @{$$s{_seq}};  }
 
@@ -2035,31 +2053,31 @@ use parent -norequire, 'Hdl::Entity', 'Hdl::Namespace';
 use Scalar::Util 'blessed'; 
 use Data::Dumper; use Carp;
 
-eval(my $js = ::convert_template('Hdl::Arch::js', 
-'
-/* architecture {(n)} */
-function _t_arch_{.of.} (_p,_n,_g,_port) {
-    hdl.obj(this,_p,_n);
-    /* generic */
-    this._gen = {@declgen,js@};
-    /* port */
-    this._prt = {@declprt,js@};
+# eval(my $js = ::convert_template('Hdl::Arch::js', 
+# '
+# /* architecture {(n)} */
+# function _t_arch_{.of.} (_p,_n,_g,_port) {
+#     hdl.obj(this,_p,_n);
+#     /* generic */
+#     this._gen = {@declgen,js@};
+#     /* port */
+#     this._prt = {@declprt,js@};
     
-    /* types */
-    this._typ =  [{@decltyp,js,","@}];
-    /* subs */
-    this._sub =  [{@declsub,js,","@}];
-    /* signals */
-    this._ssig = [{@declsig,js,","@}];
-    /* processes */
-    this._prc =  [{@declprc,js,","@}];
-    /* conc */
-    this._con =  [{@declcon,js,","@}];
+#     /* types */
+#     this._typ =  [{@decltyp,js,","@}];
+#     /* subs */
+#     this._sub =  [{@declsub,js,","@}];
+#     /* signals */
+#     this._ssig = [{@declsig,js,","@}];
+#     /* processes */
+#     this._prc =  [{@declprc,js,","@}];
+#     /* conc */
+#     this._con =  [{@declcon,js,","@}];
     
-    this.elaborate = function() {
-    }
-}
-'));
+#     this.elaborate = function() {
+#     }
+# }
+# '));
 
 sub gen     { my ($s) = @_; return @{$$s{_entity}{_gen}}; }
 sub decltyp { my ($s) = @_; return bless ({ '_decls' => [ grep { $_->isa('Hdl::Type')    } @{$$s{_decls}}]}, '::Hdl::Proc::Decls'); }
@@ -2120,6 +2138,13 @@ sub new {
             '::Hdl::Generic::Decls'            => [ 'decls', '.@_generics()' ],
             '::Hdl::Port::Decls'               => [ 'decls', '.@_ports()' ],
 
+            '::Hdl::Entity'                    => ['type', "'ENTITY'", 'name', '.n', 'generics', '.@_gen()', 'ports', '.@_prt()' ], 
+            '::Hdl::Arch'                      => ['type', "ARCHITECTURE", 'name', '.n', 'of', '.of', 'decls', '.@_decls()', 'procs', '.@_processes()', 'concs', '.@_conc()' ], 
+            '::Hdl::PackageDecl'               => ['type', "PACKAGE",     'decls', '.@_decls()'],
+            '::Hdl::PackageBody'               => ['type', "PACKAGEBODY", 'decls', '.@_decls()'],
+
+            '::Hdl::Process'                   => [ 'type', "PROCESS",  'label', '.lab', 'decls', '.@_decls()', 'block', '.@_seq()',  ],
+
             '::Hdl::Stmt::Generate::Decls'     => [ 'type', "GENERATE", 'decls', '.@_stmts()', 'conditional', '._conditional()' ],
             '::Hdl::Stmt::ComponentInstance'   => [ 'type', "COMPONENT", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
 
@@ -2144,7 +2169,7 @@ sub new {
             '::Hdl::Decl::Waveform'            => [ 'type' , "WAVEFORM", 'elem', '._elem()', 'delay', '._delay()', 'loc' , '.loc' ],
             
             '::Hdl::Expr::Binop'               => [ 'type' , "BINARYEXPRESSION",   'operator', 'binop(.op)', 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Unop'                => [ 'type' , "UNARYEXPRESSION",    'argument' , '._arg()', 'operator', '.op', 'loc' , '.loc' ],
+            '::Hdl::Expr::Unop'                => [ 'type' , "UNARYEXPRESSION",    'argument' , '._arg()', 'operator', 'unop(.op)', 'left' , '._left()', 'loc' , '.loc' ],
             '::Hdl::Expr::Wait'                => [ 'type' , "WAITEXPRESSION",     'wait' , '._wait()', 'loc' , '.loc' ],
             '::Hdl::Expr::FuncCall'            => [ 'type' , "FUNCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
             '::Hdl::Expr::ProcCall'            => [ 'type' , "PROCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
@@ -2167,7 +2192,7 @@ sub new {
             
             '::Hdl::Expr::Assign::Var'         => [ 'type' , "ASSIGNMENTEXPRESSIONVAR", 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
             '::Hdl::Expr::Assign::Sig'         => [ 'type' , "ASSIGNMENTEXPRESSIONSIG", 'left' , '._left()', 'right' , '.@_right()', 'wait' , '._wait()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Range'               => [ 'type' , "RANGEEXPRESSION",         'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Range'               => [ 'type' , "RANGEEXPRESSION",         'left' , '._left()', 'right' , '._right()', 'dir', '._dir', 'loc' , '.loc' ],
             '::Hdl::Expr::Member'              => [ 'type' , "MEMBEREXPRESSION",        'object', '._obj()', 'element' , '.elem', 'loc' , '.loc' ],
             '::Hdl::Expr::Index'               => [ 'type' , "INDEXEXPRESSION",         'object', '._obj()', 'indexes' , '.@_idxs()', 'loc' , '.loc' ],
             '::Hdl::Expr::Slice'               => [ 'type' , "SLICEEXPRESSION",         'object', '._obj()', 'range' , '._range()', 'loc' , '.loc' ],
@@ -2202,13 +2227,15 @@ sub new {
             '::Hdl::Subprog'                   => [ 'type' , "SUBPROG", 'name', '.n', 'ftyp', '.typ', 'arguments', '.@_iface()', 'decl', '.@_decls()', 'seq', '.@_seq()', 'loc' , '.loc' ],
             '::Hdl::Arg'                       => [ 'type' , "ARG", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'loc' , '.loc' ],
             
-            '::Hdl::Decl::Var'                 => [ 'type' , "VAR",  'name', '.n', 'loc' , '.loc' ],
-            '::Hdl::Decl::Sig'                 => [ 'type' , "SIG",  'name', '.n', 'loc' , '.loc' ],
+            '::Hdl::Decl::Var'                 => [ 'type' , "VAR",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Decl::Sig'                 => [ 'type' , "SIG",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
             '::Hdl::Decl::Alias'               => [ 'type' , "ALIAS", 'name', '.n', 'loc' , '.loc' ],
             '::Hdl::Decl::File'                => [ 'type' , "FILE", 'name', '.n', 'loc' , '.loc' ],
             '::Hdl::Decl::Signal'              => [ 'type' , "SIGNAL", 'name', '.n', 'typdef', '._typ()', 'loc' , '.loc' ],
             '::Hdl::Decl::Attribute'           => [ 'type' , "ATTR", 'name', '.n', 'typdef', '._typ()', 'loc' , '.loc' ],
             
+            
+            #'::Hdl::Stmt::ConcAssign::Sig'     => []
            );
 
 foreach my $k (keys (%access)) {
@@ -2233,11 +2260,12 @@ my %tok2op = (
               ','=>    "COMMA",
               '?'=>    "HOOK",
               ':'=>    "COLON",
-              '||'=>   "OR",
-              '&&'=>   "AND",
+              'or'=>   "OR",
+              'and'=>   "AND",
+              'xor'=>   "XOR",
               '|'=>    "BITWISE_OR",
               '^'=>    "BITWISE_XOR",
-              '&'=>    "BITWISE_AND",
+              '&'=>    "CONCAT",
               '==='=>  "STRICT_EQ",
               '='=>   "EQ",
               ':='=>    "ASSIGN",
@@ -2272,6 +2300,16 @@ sub binop {
     my ($s) = @_;
     die ("Unknown op $s\s") if (!defined($tok2op{$s}));
     return $tok2op{$s};
+}
+
+my %tok2op_un = (
+              'not'=>    "NOT"
+          );
+
+sub unop {
+    my ($s) = @_;
+    die ("Unknown unop $s\n") if (!defined($tok2op_un{$s}));
+    return $tok2op_un{$s};
 }
 
 # convert js,perl string struct

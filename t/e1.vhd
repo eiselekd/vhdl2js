@@ -9,23 +9,24 @@ entity e1 is
   port (
     clk : in std_logic;
     rst : in std_logic;
-    in0 : in std_logic_vector(glen downto 0);
+    in0 : in std_logic_vector(glen downto 0) ;
     out0 : out std_logic_vector(glen downto 0)
     );
 end;
 
 architecture rtl of e1 is
   signal s0,s1 : std_logic;
+  signal sv0 : std_logic_vector(1 downto 0);
 begin
   s1 <= s0 after 2 ns;
   
   p0 : process(rst, in0)
-    variable v0, v1 : std_logic;
+    variable v0, v1 : std_logic := '0';
   begin
     
     v1 := '0';
     v0 := '0';
-    if (in0(0) = '0') then
+    if (not (in0(1 downto 0) = "01" or in0(0) = '0')) then
       if (in0(1) = '0') then
         v0 := '0';
       end if;
@@ -43,7 +44,7 @@ begin
       v1 := '0';
     end if;
     
-    out0(0) <= v0;
+    out0(1 downto 0) <= v0 & v1; --v0 & v1;
     out0(1) <= v1;
   end process;
   

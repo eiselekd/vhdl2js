@@ -1,4 +1,12 @@
-files = [{
+if (typeof GENERIC === 'undefined') {
+    eval(read("../rt/def.js"));
+    eval(exports.consts);
+}
+
+if (typeof files === 'undefined') {
+    files = {};
+};
+files['top.vhd'] = {
     fn: "top.vhd",
     lines: [
         [],
@@ -708,282 +716,627 @@ files = [{
             txt: ";"
         }]
     ]
-}];
-/* entity top */
-
-function _t_entity_top(_p, _n, _g, _port) {
-    hdl.obj(this, _p, _n);
-    /* generic */
-    this._gen = {
-        decls: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "26"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "28"
-                    }
+};
+if (typeof entities === 'undefined') {
+    entities = {};
+};
+entities['top'] = {
+    type: 'ENTITY',
+    name: "top",
+    generics: [{
+        type: GENERIC,
+        name: "gcnt",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "26"
                 },
-                loc: "24"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "30"
-            },
-            loc: "22"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "36"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "38"
-                    }
+                right: {
+                    type: INTLITERAL,
+                    value: "4",
+                    loc: "28"
                 },
-                loc: "34"
+                dir: "to"
             },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "40"
-            },
-            loc: "32"
-        }]
-    };
-    /* port */
-    this._prt = {
-        decls: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "26"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "28"
-                    }
-                },
-                loc: "24"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "30"
-            },
-            loc: "22"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "36"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "38"
-                    }
-                },
-                loc: "34"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "40"
-            },
-            loc: "32"
-        }]
-    };
-
-    this.elaborate = function() {}
-}
-
-/* architecture rtl of top */
-
-function _t_arch_top(_p, _n, _g, _port) {
-    hdl.obj(this, _p, _n);
-    /* generic */
-    this._gen = {
-        decls: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "26"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "28"
-                    }
-                },
-                loc: "24"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "30"
-            },
-            loc: "22"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "36"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "38"
-                    }
-                },
-                loc: "34"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "40"
-            },
-            loc: "32"
-        }]
-    };
-    /* port */
-    this._prt = {
-        decls: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "26"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "28"
-                    }
-                },
-                loc: "24"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "30"
-            },
-            loc: "22"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "36"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "38"
-                    }
-                },
-                loc: "34"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "40"
-            },
-            loc: "32"
-        }]
-    };
-
-    /* types */
-    this._typ = [{
-        decls: [{
-            type: TYPEARRAY,
-            name: "<vectyp>",
+            loc: "24"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "1",
+            loc: "30"
+        },
+        loc: "22"
+    }, {
+        type: GENERIC,
+        name: "glen",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
             range: {
                 type: RANGEEXPRESSION,
                 left: {
                     type: INTLITERAL,
                     value: "0",
-                    loc: "75"
+                    loc: "36"
                 },
                 right: {
-                    type: BINARYEXPRESSION,
-                    operator: MINUS,
+                    type: INTLITERAL,
+                    value: "31",
+                    loc: "38"
+                },
+                dir: "to"
+            },
+            loc: "34"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "0",
+            loc: "40"
+        },
+        loc: "32"
+    }],
+    ports: [{
+        type: GENERIC,
+        name: "gcnt",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "26"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "4",
+                    loc: "28"
+                },
+                dir: "to"
+            },
+            loc: "24"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "1",
+            loc: "30"
+        },
+        loc: "22"
+    }, {
+        type: GENERIC,
+        name: "glen",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "0",
+                    loc: "36"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "31",
+                    loc: "38"
+                },
+                dir: "to"
+            },
+            loc: "34"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "0",
+            loc: "40"
+        },
+        loc: "32"
+    }]
+};
+if (typeof arch === 'undefined') {
+    arch = {};
+};
+if (typeof arch['top'] === 'undefined') {
+    arch['top'] = {};
+};
+arch['top']['rtl'] = {
+    type: ARCHITECTURE,
+    name: "rtl",
+    of: "top",
+    decls: [{
+        type: TYPEARRAY,
+        name: "<vectyp>",
+        range: {
+            type: RANGEEXPRESSION,
+            left: {
+                type: INTLITERAL,
+                value: "0",
+                loc: "75"
+            },
+            right: {
+                type: BINARYEXPRESSION,
+                operator: MINUS,
+                left: {
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "gcnt",
+                    loc: "77"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "79"
+                },
+                loc: "78"
+            },
+            dir: "to"
+        }
+    }, {
+        type: SUBPROG,
+        name: "=",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: SUBPROG,
+        name: "/=",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: SUBPROG,
+        name: "&",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: SUBPROG,
+        name: "&",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
                     left: {
                         type: IDENTIFIER,
                         phase: 'name',
-                        value: "gcnt",
-                        loc: "77"
+                        value: "glen",
+                        loc: "84"
                     },
                     right: {
                         type: INTLITERAL,
                         value: "1",
-                        loc: "79"
+                        loc: "86"
                     },
-                    loc: "78"
-                }
-            }
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "83"
+            },
+            loc: "83"
         }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: SUBPROG,
+        name: "&",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPEARRAY,
+                name: "<vectyp>",
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "75"
+                    },
+                    right: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "gcnt",
+                            loc: "77"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "79"
+                        },
+                        loc: "78"
+                    },
+                    dir: "to"
+                }
+            },
+            loc: "73"
+        }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "84"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "86"
+                    },
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "83"
+            },
+            loc: "83"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: SUBPROG,
+        name: "&",
+        ftyp: "function",
+        arguments: [{
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "84"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "86"
+                    },
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "83"
+            },
+            loc: "83"
+        }, {
+            type: ARG,
+            name: "<anonymous>",
+            mode: "in ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "84"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "86"
+                    },
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "83"
+            },
+            loc: "83"
+        }],
+        decl: [],
+        seq: [],
+        loc: "71"
+    }, {
+        type: TYPECONSTRAINEDARRAY,
+        name: "vectyp",
+        range: {
+            type: RANGEEXPRESSION,
+            left: {
+                type: INTLITERAL,
+                value: "0",
+                loc: "75"
+            },
+            right: {
+                type: BINARYEXPRESSION,
+                operator: MINUS,
+                left: {
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "gcnt",
+                    loc: "77"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "79"
+                },
+                loc: "78"
+            },
+            dir: "to"
+        },
+        typmark: "<vectyp>"
+    }, {
+        type: SIGNAL,
+        name: "rst",
+        typdef: {
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "90"
+    }, {
+        type: SIGNAL,
+        name: "i0",
+        typdef: {
             type: TYPECONSTRAINEDARRAY,
             name: "vectyp",
             range: {
@@ -1008,505 +1361,49 @@ function _t_arch_top(_p, _n, _g, _port) {
                         loc: "79"
                     },
                     loc: "78"
-                }
+                },
+                dir: "to"
             },
             typmark: "<vectyp>"
-        }]
-    }];
-    /* subs */
-    this._sub = [{
-        decls: [{
-            type: SUBPROG,
-            name: "=",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
+        },
+        loc: "95"
+    }, {
+        type: SIGNAL,
+        name: "o0",
+        typdef: {
+            type: TYPECONSTRAINEDARRAY,
+            name: "vectyp",
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "0",
+                    loc: "75"
                 },
-                loc: "73"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }, {
-            type: SUBPROG,
-            name: "/=",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }, {
-            type: SUBPROG,
-            name: "&",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }, {
-            type: SUBPROG,
-            name: "&",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPECONSTRAINEDARRAY,
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "glen",
-                            loc: "84"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "86"
-                        }
-                    },
-                    typmark: "std_logic_vector",
-                    loc: "83"
-                },
-                loc: "83"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }, {
-            type: SUBPROG,
-            name: "&",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPEARRAY,
-                    name: "<vectyp>",
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "75"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: MINUS,
-                            left: {
-                                type: IDENTIFIER,
-                                phase: 'name',
-                                value: "gcnt",
-                                loc: "77"
-                            },
-                            right: {
-                                type: INTLITERAL,
-                                value: "1",
-                                loc: "79"
-                            },
-                            loc: "78"
-                        }
-                    }
-                },
-                loc: "73"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPECONSTRAINEDARRAY,
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "glen",
-                            loc: "84"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "86"
-                        }
-                    },
-                    typmark: "std_logic_vector",
-                    loc: "83"
-                },
-                loc: "83"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }, {
-            type: SUBPROG,
-            name: "&",
-            ftyp: "function",
-            arguments: [{
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPECONSTRAINEDARRAY,
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "glen",
-                            loc: "84"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "86"
-                        }
-                    },
-                    typmark: "std_logic_vector",
-                    loc: "83"
-                },
-                loc: "83"
-            }, {
-                type: ARG,
-                name: "<anonymous>",
-                mode: "in ",
-                typedef: {
-                    type: TYPECONSTRAINEDARRAY,
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "glen",
-                            loc: "84"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "86"
-                        }
-                    },
-                    typmark: "std_logic_vector",
-                    loc: "83"
-                },
-                loc: "83"
-            }],
-            decl: [],
-            seq: [],
-            loc: "71"
-        }]
-    }];
-    /* signals */
-    this._ssig = [{
-        decls: [{
-            type: SIGNAL,
-            name: "rst",
-            typdef: {
-                type: TYPEENUM,
-                name: "std_logic"
-            },
-            loc: "90"
-        }, {
-            type: SIGNAL,
-            name: "i0",
-            typdef: {
-                type: TYPECONSTRAINEDARRAY,
-                name: "vectyp",
-                range: {
-                    type: RANGEEXPRESSION,
+                right: {
+                    type: BINARYEXPRESSION,
+                    operator: MINUS,
                     left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "75"
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "gcnt",
+                        loc: "77"
                     },
                     right: {
-                        type: BINARYEXPRESSION,
-                        operator: MINUS,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "gcnt",
-                            loc: "77"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "79"
-                        },
-                        loc: "78"
-                    }
-                },
-                typmark: "<vectyp>"
-            },
-            loc: "95"
-        }, {
-            type: SIGNAL,
-            name: "o0",
-            typdef: {
-                type: TYPECONSTRAINEDARRAY,
-                name: "vectyp",
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
                         type: INTLITERAL,
-                        value: "0",
-                        loc: "75"
+                        value: "1",
+                        loc: "79"
                     },
-                    right: {
-                        type: BINARYEXPRESSION,
-                        operator: MINUS,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "gcnt",
-                            loc: "77"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "79"
-                        },
-                        loc: "78"
-                    }
+                    loc: "78"
                 },
-                typmark: "<vectyp>"
+                dir: "to"
             },
-            loc: "100"
-        }]
-    }];
-    /* processes */
-    this._prc = [undef];
-    /* conc */
-    this._con = [{
+            typmark: "<vectyp>"
+        },
+        loc: "100"
+    }],
+    procs: [],
+    concs: [{
         type: GENERATE,
         cond: "for",
         decls: [{
@@ -1623,7 +1520,8 @@ function _t_arch_top(_p, _n, _g, _port) {
                     type: INTLITERAL,
                     value: "0",
                     loc: "114"
-                }
+                },
+                dir: "downto"
             }
         },
         loc: "105"
@@ -1743,7 +1641,5 @@ function _t_arch_top(_p, _n, _g, _port) {
             loc: "157"
         },
         loc: "151"
-    }];
-
-    this.elaborate = function() {}
-}
+    }]
+};

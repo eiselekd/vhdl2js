@@ -1,4 +1,12 @@
+
 var tokens = [
+
+ "ARCHITECTURE",
+ "ENTITY",
+ "PROCESS",
+ "PACKAGE",
+
+ "CONCAT",
     
  "GENERATE",
  "COMPONENT",

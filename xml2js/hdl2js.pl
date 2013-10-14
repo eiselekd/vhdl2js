@@ -263,6 +263,13 @@ $top = Hdl::Top::new(0,0);
 @packaged = ();
 %loc2id = ();
 @filear = (); my @o = ();
+
+sub escape_str{
+    my ($s) = @_;
+    $s =~ s/"/\\"/g;
+    return $s;
+}
+
 foreach $f (@ARGV) {
     my $p = XML::LibXML->new();
     my $d = $p->parse_file($f);
@@ -309,7 +316,7 @@ foreach $f (@ARGV) {
         if (defined($f = $fln[$i])) {
             foreach my $l (@$f) {
                 print("[".$$l[1]."]") if ($::d);
-                push(@l,"{ id: ".$$l[0].", txt: \"".$$l[1]."\"}");
+                push(@l,"{ id: ".$$l[0].", txt: \"".escape_str($$l[1])."\"}");
             }
             print ("\n") if ($::d);;
         }
@@ -317,12 +324,23 @@ foreach $f (@ARGV) {
     }
     push(@filear,$of);
     $o .= "{ fn: \"$of\", lines: [".join(",",@lc)."]}";
-    push (@o,$o);
+    push (@o,[$of,$o]);
     #print $o;
 }
-print $OUT  "files=[".join(",",@o)."];";
 
+print($OUT "
+if (typeof GENERIC === 'undefined') {
+eval(read(\"../rt/def.js\"));
+eval(exports.consts);
+}
 
+");
+
+print $OUT  "if (typeof files === 'undefined') { files = {}; };  ";
+foreach my $f (@o) {
+    my ($of,$o) = @$f;
+    print $OUT "files['".$of."'] = $o;\n";
+}
 
 foreach $f (@ARGV) {
     my $p = XML::LibXML->new();
@@ -346,24 +364,25 @@ foreach $f (@ARGV) {
                 push(@packaged, my $e = Hdl::PackageDecl::new($top,$p));
                 $en = $$e{n};
                 print($OUT "/* Package decl $en */\n");
-                print($OUT $e->js($OUT));
+                print( $OUT "if (typeof package === 'undefined') { package = {}; };  package['".$en."'] = ".$e->js($OUT).";");
+                #print($OUT $e->js($OUT).";");
             }
             for (my $pi = 0; $pi < scalar(@pckbody); $pi++) {
                 my $p = $pckbody[$pi];
                 push(@packageb, my $e = Hdl::PackageBody::new($top,$p));
                 $en = $$e{n};
-                print $OUT "/* Package body $en */\n";
-                print $OUT $e->js($OUT);
+                print( $OUT "if (typeof packageBody === 'undefined') { packageBody = {}; }; packageBody['".$en."'] = ".$e->js($OUT).";");
             }
             foreach my $ent (@ent) {
                 my $en = $ent->getAttribute('n');
                 push(@entities, my $e = Hdl::Entity::new($top,$ent));
-                print $OUT $e->js($OUT);
+                print( $OUT "if (typeof entities === 'undefined') { entities = {}; }; entities['".$e->{n}."'] = ".$e->js($OUT).";");
             }
             for (my $ai = 0; $ai < scalar(@arch); $ai++) {
-                my $arch = $arch[$ai];
+                my $arch = $arch[$ai]; 
                 push(@archs, my $e = Hdl::Arch::new($top,$arch));
-                print $OUT $e->js($OUT);
+                my $of = $e->{'of'};
+                print( $OUT "if (typeof arch === 'undefined') { arch = {}; }; if (typeof arch['$of'] === 'undefined') { arch['$of'] = {}; }; arch['$of']['".$e->{n}."'] = ".$e->js($OUT).";");
             }
         }
     }
