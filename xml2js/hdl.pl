@@ -2127,115 +2127,120 @@ sub new {
     return $r;
 }
 
+package Hdl;
+
 %access = (
            '::Hdl::Stmt::Block' => "\@_stmts"
           );
 
-%mapping = (
-            '::Hdl::Proc::Decls'               => [ 'decls', '.@_decls()' ],
-            '::Hdl::PackageDecl::Decls'        => [ 'decls', '.@_decls()' ],
-            '::Hdl::PackageBody::Decls'        => [ 'decls', '.@_decls()' ],
-            '::Hdl::Generic::Decls'            => [ 'decls', '.@_generics()' ],
-            '::Hdl::Port::Decls'               => [ 'decls', '.@_ports()' ],
+@mapping = (
+            '::Hdl::Proc::Decls'               , [ 'decls', '.@_decls()' ],
+            '::Hdl::PackageDecl::Decls'        , [ 'decls', '.@_decls()' ],
+            '::Hdl::PackageBody::Decls'        , [ 'decls', '.@_decls()' ],
+            '::Hdl::Generic::Decls'            , [ 'decls', '.@_generics()' ],
+            '::Hdl::Port::Decls'               , [ 'decls', '.@_ports()' ],
 
-            '::Hdl::Entity'                    => ['type', "'ENTITY'", 'name', '.n', 'generics', '.@_gen()', 'ports', '.@_prt()' ], 
-            '::Hdl::Arch'                      => ['type', "ARCHITECTURE", 'name', '.n', 'of', '.of', 'decls', '.@_decls()', 'procs', '.@_processes()', 'concs', '.@_conc()' ], 
-            '::Hdl::PackageDecl'               => ['type', "PACKAGE",     'decls', '.@_decls()'],
-            '::Hdl::PackageBody'               => ['type', "PACKAGEBODY", 'decls', '.@_decls()'],
+            '::Hdl::Entity'                    , ['type', "ENTITY", 'name', '.n', 'generics', '.@_gen()', 'ports', '.@_prt()' ], 
+            '::Hdl::Arch'                      , ['type', "ARCHITECTURE", 'name', '.n', 'of', '.of', 'decls', '.@_decls()', 'procs', '.@_processes()', 'concs', '.@_conc()' ], 
+            '::Hdl::PackageDecl'               , ['type', "PACKAGE",     'decls', '.@_decls()'],
+            '::Hdl::PackageBody'               , ['type', "PACKAGEBODY", 'decls', '.@_decls()'],
 
-            '::Hdl::Process'                   => [ 'type', "PROCESS",  'label', '.lab', 'decls', '.@_decls()', 'block', '.@_seq()',  ],
+            '::Hdl::Process'                   , [ 'type', "PROCESS",  'label', '.lab', 'decls', '.@_decls()', 'block', '.@_seq()',  ],
 
-            '::Hdl::Stmt::Generate::Decls'     => [ 'type', "GENERATE", 'decls', '.@_stmts()', 'conditional', '._conditional()' ],
-            '::Hdl::Stmt::ComponentInstance'   => [ 'type', "COMPONENT", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
+            '::Hdl::Stmt::Generate::Decls'     , [ 'type', "GENERATE", 'decls', '.@_stmts()', 'conditional', '._conditional()' ],
+            '::Hdl::Stmt::ComponentInstance'   , [ 'type', "COMPONENT", 'generics', '.@_generics()', 'ports', '.@_ports()' ],
 
-            'Hdl::Stmt::Generate'              => [ 'type', "GENERATE", 'cond', '._typ', 'decls', '.@_stmts()', 'conditional', '._conditional()', 'loc' , '.loc' ],
+            'Hdl::Stmt::Generate'              , [ 'type', "GENERATE", 'cond', '._typ', 'decls', '.@_stmts()', 'conditional', '._conditional()', 'loc' , '.loc' ],
 
 
-            '::Hdl::Generic'                   => [ 'type' , "GENERIC", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Generic'                   , [ 'type' , "GENERIC", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()', 'loc' , '.loc' ],
             
-            '::Hdl::Component'                 => [ 'type' , "COMPONENT", 'generics', '.@_gen()', 'ports', '.@_prt()', 'loc' , '.loc' ],
-            '::Hdl::Attribute'                 => [ 'type' , "ATTRIBUTEDEF", 'val', '._val()', 'names', '["names"]', 'loc' , '.loc' ], # todo print names array of Hdl::Attribute
+            '::Hdl::Component'                 , [ 'type' , "COMPONENT", 'generics', '.@_gen()', 'ports', '.@_prt()', 'loc' , '.loc' ],
+            '::Hdl::Attribute'                 , [ 'type' , "ATTRIBUTEDEF", 'val', '._val()', 'names', '["names"]', 'loc' , '.loc' ], # todo print names array of Hdl::Attribute
 
-            '::Hdl::Type::Int'                 => [ 'type' , "INTEGER", 'loc' , '.loc' ],
-            '::Hdl::Type::Int::Constrained'    => [ 'type' , "INTEGERSUBTYPE", 'range', '._range()', 'loc' , '.loc' ],
-            '::Hdl::Type::String::Constrained' => [ 'type' , "STRINGSUBTYPE", 'range', '._range()', 'loc' , '.loc' ],
-            '::Hdl::Type::Access'              => [ 'type' , "ACCESSTYPE", 'to', '._typ', 'loc' , '.loc' ],
-            '::Hdl::Expr::List'                => [ 'type' , "LIST", 'list', '.@_list()', 'loc' , '.loc' ],
+            '::Hdl::Type::Int'                 , [ 'type' , "INTEGER", 'loc' , '.loc' ],
+            '::Hdl::Type::Int::Constrained'    , [ 'type' , "INTEGERSUBTYPE", 'range', '._range()', 'loc' , '.loc' ],
+            '::Hdl::Type::String::Constrained' , [ 'type' , "STRINGSUBTYPE", 'range', '._range()', 'loc' , '.loc' ],
+            '::Hdl::Type::Access'              , [ 'type' , "ACCESSTYPE", 'to', '._typ', 'loc' , '.loc' ],
+            '::Hdl::Expr::List'                , [ 'type' , "LIST", 'list', '.@_list()', 'loc' , '.loc' ],
 
-            '::Hdl::Expr::IntLiteral'          => [ 'type' , "INTLITERAL",       'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::EnumLiteral'         => [ 'type' , "ENUMLITERAL",      'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::BitStringLiteral'    => [ 'type' , "BITSTRINGLITERAL", 'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::StringLiteral'       => [ 'type' , "STRINGLITERAL",    'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Decl::Waveform'            => [ 'type' , "WAVEFORM", 'elem', '._elem()', 'delay', '._delay()', 'loc' , '.loc' ],
+            '::Hdl::Expr::IntLiteral'          , [ 'type' , "INTLITERAL",       'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::EnumLiteral'         , [ 'type' , "ENUMLITERAL",      'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::BitStringLiteral'    , [ 'type' , "BITSTRINGLITERAL", 'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::StringLiteral'       , [ 'type' , "STRINGLITERAL",    'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Decl::Waveform'            , [ 'type' , "WAVEFORM", 'elem', '._elem()', 'delay', '._delay()', 'loc' , '.loc' ],
             
-            '::Hdl::Expr::Binop'               => [ 'type' , "BINARYEXPRESSION",   'operator', 'binop(.op)', 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Unop'                => [ 'type' , "UNARYEXPRESSION",    'argument' , '._arg()', 'operator', 'unop(.op)', 'left' , '._left()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Wait'                => [ 'type' , "WAITEXPRESSION",     'wait' , '._wait()', 'loc' , '.loc' ],
-            '::Hdl::Expr::FuncCall'            => [ 'type' , "FUNCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
-            '::Hdl::Expr::ProcCall'            => [ 'type' , "PROCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Qual'                => [ 'type' , "QUALEXPRESSION",     'typedef' , '._typ', 'right' , '._right()', 'loc' , '.loc' ],
-            '::Hdl::Expr::TypeConv'            => [ 'type' , "TYPECONVERSION",     'typedef' , '._typ()', 'value' , '._val()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Binop'               , [ 'type' , "BINARYEXPRESSION",   'operator', 'binop(.op)', 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Unop'                , [ 'type' , "UNARYEXPRESSION",    'argument' , '._arg()', 'operator', 'unop(.op)', 'left' , '._left()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Wait'                , [ 'type' , "WAITEXPRESSION",     'wait' , '._wait()', 'loc' , '.loc' ],
+            '::Hdl::Expr::FuncCall'            , [ 'type' , "FUNCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
+            '::Hdl::Expr::ProcCall'            , [ 'type' , "PROCCALLEXPRESSION", 'arguments' , '.@_arg()', 'calee', '._callee()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Qual'                , [ 'type' , "QUALEXPRESSION",     'typedef' , '._typ', 'right' , '._right()', 'loc' , '.loc' ],
+            '::Hdl::Expr::TypeConv'            , [ 'type' , "TYPECONVERSION",     'typedef' , '._typ()', 'value' , '._val()', 'loc' , '.loc' ],
  
-            '::Hdl::Expr::Name'                => [ 'type' , "IDENTIFIER", 'phase' , "'name'", 'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::Var'                 => [ 'type' , "IDENTIFIER", 'phase' , "'var'",  'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::Sig'                 => [ 'type' , "IDENTIFIER", 'phase' , "'sig'",  'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::Const'               => [ 'type' , "IDENTIFIER", 'phase' , "'const'", 'value', '.val', 'loc' , '.loc' ],
-            '::Hdl::Expr::Alias'               => [ 'type' , "IDENTIFIER", 'phase', "'alias'", 'loc' , '.loc' ],
-            '::Hdl::Expr::Aggregate'           => [ 'type' , "AGGREGATE",  'entries' , '.@_entries()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Aggregate::E'        => [ 'type' , "AGGREGATEENTRY",  'tags' , '.@_tags()', 'value', '._val()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Agg'                 => [ 'type' , "SIMPLEAGGREGATE",  'entries' , '.@_entries()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Name'                , [ 'type' , "IDENTIFIER", 'phase' , "'name'", 'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::Var'                 , [ 'type' , "IDENTIFIER", 'phase' , "'var'",  'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::Sig'                 , [ 'type' , "IDENTIFIER", 'phase' , "'sig'",  'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::Const'               , [ 'type' , "IDENTIFIER", 'phase' , "'const'", 'value', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::Alias'               , [ 'type' , "IDENTIFIER", 'phase', "'alias'", 'loc' , '.loc' ],
+            '::Hdl::Expr::Aggregate'           , [ 'type' , "AGGREGATE",  'entries' , '.@_entries()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Aggregate::E'        , [ 'type' , "AGGREGATEENTRY",  'tags' , '.@_tags()', 'value', '._val()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Agg'                 , [ 'type' , "SIMPLEAGGREGATE",  'entries' , '.@_entries()', 'loc' , '.loc' ],
                         
-            '::Hdl::Expr::Assoc'               => [ 'type' , "ASSOCIATION",  'value' , '._val()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Assoc'               , [ 'type' , "ASSOCIATION",  'value' , '._val()', 'loc' , '.loc' ],
             
-            '::Hdl::Expr::Choice::Others'      => [ 'type' , "OTHERS", 'loc' , '.loc' ],
-            '::Hdl::Expr::Choice::Name'        => [ 'type' , "NAME", 'name', '.val', 'loc' , '.loc' ],
+            '::Hdl::Expr::Choice::Others'      , [ 'type' , "OTHERS", 'loc' , '.loc' ],
+            '::Hdl::Expr::Choice::Name'        , [ 'type' , "NAME", 'name', '.val', 'loc' , '.loc' ],
             
-            '::Hdl::Expr::Assign::Var'         => [ 'type' , "ASSIGNMENTEXPRESSIONVAR", 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Assign::Sig'         => [ 'type' , "ASSIGNMENTEXPRESSIONSIG", 'left' , '._left()', 'right' , '.@_right()', 'wait' , '._wait()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Range'               => [ 'type' , "RANGEEXPRESSION",         'left' , '._left()', 'right' , '._right()', 'dir', '._dir', 'loc' , '.loc' ],
-            '::Hdl::Expr::Member'              => [ 'type' , "MEMBEREXPRESSION",        'object', '._obj()', 'element' , '.elem', 'loc' , '.loc' ],
-            '::Hdl::Expr::Index'               => [ 'type' , "INDEXEXPRESSION",         'object', '._obj()', 'indexes' , '.@_idxs()', 'loc' , '.loc' ],
-            '::Hdl::Expr::Slice'               => [ 'type' , "SLICEEXPRESSION",         'object', '._obj()', 'range' , '._range()', 'loc' , '.loc' ],
-            '::Hdl::Expr::SlicePos'            => [ 'type' , "SLICEPOSEXPRESSION",      'object', '._obj()', 'pos' , '._pos', 'loc' , '.loc' ],
-            '::Hdl::Expr::Attribute'           => [ 'type' , "ATTRIBUTE",               'object', '._obj()', 'attribute' , '._attr', 'parameter' => '._param()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Assign::Var'         , [ 'type' , "ASSIGNMENTEXPRESSIONVAR", 'left' , '._left()', 'right' , '._right()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Assign::Sig'         , [ 'type' , "ASSIGNMENTEXPRESSIONSIG", 'left' , '._left()', 'right' , '.@_right()', 'wait' , '._wait()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Range'               , [ 'type' , "RANGEEXPRESSION",         'left' , '._left()', 'right' , '._right()', 'dir', '._dir', 'loc' , '.loc' ],
+            '::Hdl::Expr::Member'              , [ 'type' , "MEMBEREXPRESSION",        'object', '._obj()', 'element' , '.elem', 'loc' , '.loc' ],
+            '::Hdl::Expr::Index'               , [ 'type' , "INDEXEXPRESSION",         'object', '._obj()', 'indexes' , '.@_idxs()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Slice'               , [ 'type' , "SLICEEXPRESSION",         'object', '._obj()', 'range' , '._range()', 'loc' , '.loc' ],
+            '::Hdl::Expr::SlicePos'            , [ 'type' , "SLICEPOSEXPRESSION",      'object', '._obj()', 'pos' , '._pos', 'loc' , '.loc' ],
+            '::Hdl::Expr::Attribute'           , [ 'type' , "ATTRIBUTE",               'object', '._obj()', 'attribute' , '._attr', 'parameter' , '._param()', 'loc' , '.loc' ],
                                           
-            '::Hdl::Stmt::If'                  => [ 'type' , "IFSTATEMENT",             'test' , '._cond()', 'consequence' , '._true()', 'alternate' , '._false()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Block'               => [ 'type' , "BLOCKSTATEMENT",          'body' , '.@_stmts()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Case'                => [ 'type' , "SWITCHSTATEMENT",         'discriminant', '._obj()', 'cases' , '.@_cases()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Case::Val'           => [ 'type' , "SWITCHCASE",              'tests' , '.@_c()', 'consequence', '._b()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Loop'                => [ 'type' , "LOOPSTATEMENT",           'param' , '._param()', 'block' , '._block()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Wait'                => [ 'type' , "WAITSTATEMENT",           'wait' , '._wait()', 'loc' , '.loc'],
+            '::Hdl::Stmt::If'                  , [ 'type' , "IFSTATEMENT",             'test' , '._cond()', 'consequence' , '._true()', 'alternate' , '._false()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Block'               , [ 'type' , "BLOCKSTATEMENT",          'body' , '.@_stmts()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Case'                , [ 'type' , "SWITCHSTATEMENT",         'discriminant', '._obj()', 'cases' , '.@_cases()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Case::Val'           , [ 'type' , "SWITCHCASE",              'tests' , '.@_c()', 'consequence', '._b()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Loop'                , [ 'type' , "LOOPSTATEMENT",           'param' , '._param()', 'block' , '._block()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Wait'                , [ 'type' , "WAITSTATEMENT",           'wait' , '._wait()', 'loc' , '.loc'],
 
-            '::Hdl::Expr::Param'               => [ 'type' , "LOOPPARAM",  'name', '.n', 'range', '._range()', 'loc' , '.loc' ],
+            '::Hdl::Expr::Param'               , [ 'type' , "LOOPPARAM",  'name', '.n', 'range', '._range()', 'loc' , '.loc' ],
 
 
-            '::Hdl::Stmt::While'               => [ 'type' , "WHILESTATEMENT",          'test' , '._test()', 'block' , '._block()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Break'               => [ 'type' , "BREAKSTATEMENT",          'cond' , '._cond()', 'loc' , '.loc' ],
-            '::Hdl::Stmt::Return'              => [ 'type' , "RETURNSTATEMENT",          'ret' , '._ret()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::While'               , [ 'type' , "WHILESTATEMENT",          'test' , '._test()', 'block' , '._block()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Break'               , [ 'type' , "BREAKSTATEMENT",          'cond' , '._cond()', 'loc' , '.loc' ],
+            '::Hdl::Stmt::Return'              , [ 'type' , "RETURNSTATEMENT",          'ret' , '._ret()', 'loc' , '.loc' ],
 
-            '::Hdl::Stmt::Report'              => [ 'type' , "REPORTSTATEMENT"  , 'loc' , '.loc'         ],
-            '::Hdl::Stmt::Assert'              => [ 'type' , "ASSERTSTATEMENT"  , 'loc' , '.loc'         ],
+            '::Hdl::Stmt::Report'              , [ 'type' , "REPORTSTATEMENT"  , 'loc' , '.loc'         ],
+            '::Hdl::Stmt::Assert'              , [ 'type' , "ASSERTSTATEMENT"  , 'loc' , '.loc'         ],
             
 
-            '::Hdl::Type::Record'              => [ 'type' , "TYPERECORD", 'name', '.n', 'entries', '.@_entries()', 'loc' , '.loc' ], 
-            '::Hdl::Type::Record::Entry'       => [ 'type' , "RECORDENTRY", 'tag', '.n', 'typedef', '._typ()', 'loc' , '.loc' ],
-            '::Hdl::Type::Ref'                 => [ 'type' , "TYPEREF", 'typedef', '.n', 'loc' , '.loc' ],
-            '::Hdl::Type::Array::Constrained'  => [ 'type' , "TYPECONSTRAINEDARRAY",  'name', '.n', 'range', '._range()', 'typmark', '._typmark' , 'loc' , '.loc' ],
-            '::Hdl::Type::Array'               => [ 'type' , "TYPEARRAY", 'name', '.n', 'range', '._range()', 'loc' , '.loc' ],
-            '::Hdl::Type::Enum'                => [ 'type' , "TYPEENUM", 'name', '.n', 'values', '["_vals"]', 'loc' , '.loc' ],
+            '::Hdl::Type::Record'              , [ 'type' , "TYPERECORD", 'name', '.n', 'entries', '.@_entries()', 'loc' , '.loc' ], 
+            '::Hdl::Type::Record::Entry'       , [ 'type' , "RECORDENTRY", 'tag', '.n', 'typedef', '._typ()', 'loc' , '.loc' ],
+            '::Hdl::Type::Ref'                 , [ 'type' , "TYPEREF", 'typedef', '.n', 'loc' , '.loc' ],
+            '::Hdl::Type::Array::Constrained'  , [ 'type' , "TYPECONSTRAINEDARRAY",  'name', '.n', 'range', '._range()', 'typmark', '._typmark' , 'loc' , '.loc' ],
+            '::Hdl::Type::Array'               , [ 'type' , "TYPEARRAY", 'name', '.n', 'range', '._range()', 'loc' , '.loc' ],
+            '::Hdl::Type::Enum'                , [ 'type' , "TYPEENUM", 'name', '.n', 'values', '["_vals"]', 'loc' , '.loc' ],
             
-            '::Hdl::Subprog'                   => [ 'type' , "SUBPROG", 'name', '.n', 'ftyp', '.typ', 'arguments', '.@_iface()', 'decl', '.@_decls()', 'seq', '.@_seq()', 'loc' , '.loc' ],
-            '::Hdl::Arg'                       => [ 'type' , "ARG", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'loc' , '.loc' ],
+            '::Hdl::Subprog'                   , [ 'type' , "SUBPROG", 'name', '.n', 'ftyp', '.typ', 'arguments', '.@_iface()', 'decl', '.@_decls()', 'seq', '.@_seq()', 'loc' , '.loc' ],
+            '::Hdl::Arg'                       , [ 'type' , "ARG", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'loc' , '.loc' ],
             
-            '::Hdl::Decl::Var'                 => [ 'type' , "VAR",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
-            '::Hdl::Decl::Sig'                 => [ 'type' , "SIG",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
-            '::Hdl::Decl::Alias'               => [ 'type' , "ALIAS", 'name', '.n', 'loc' , '.loc' ],
-            '::Hdl::Decl::File'                => [ 'type' , "FILE", 'name', '.n', 'loc' , '.loc' ],
-            '::Hdl::Decl::Signal'              => [ 'type' , "SIGNAL", 'name', '.n', 'typdef', '._typ()', 'loc' , '.loc' ],
-            '::Hdl::Decl::Attribute'           => [ 'type' , "ATTR", 'name', '.n', 'typdef', '._typ()', 'loc' , '.loc' ],
+            '::Hdl::Decl::Var'                 , [ 'type' , "VAR",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Decl::Sig'                 , [ 'type' , "SIG",  'name', '.n', 'typedef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Decl::Alias'               , [ 'type' , "ALIAS", 'name', '.n', 'loc' , '.loc' ],
+            '::Hdl::Decl::File'                , [ 'type' , "FILE", 'name', '.n', 'loc' , '.loc' ],
+            '::Hdl::Decl::Signal'              , [ 'type' , "SIGNAL", 'name', '.n', 'typdef', '._typ()', 'initializer', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Decl::Attribute'           , [ 'type' , "ATTR", 'name', '.n', 'typdef', '._typ()', 'loc' , '.loc' ],
             
             
-            #'::Hdl::Stmt::ConcAssign::Sig'     => []
+            '::Hdl::Select'                    , [ 'type', "SELECT", 'object', '.object()',  'indexes', '.@indexes()'  ],  # in fold.js
+            '::Hdl::Append'                    , [ 'type', "APPEND", 'elements', '.@elements()'  ],  # in fold.js
+            
+            #'::Hdl::Stmt::ConcAssign::Sig'     , []
            );
 
 foreach my $k (keys (%access)) {
@@ -2313,8 +2318,9 @@ sub unop {
 }
 
 # convert js,perl string struct
-foreach my $k (keys (%mapping)) {
-    my $v = $mapping{$k};
+for (my $mi = 0; $mi +1 < scalar(@mapping); $mi+=2) {
+    my ($k,$v) = ($mapping[$mi],$mapping[$mi+1]);
+    #my $v = $mapping{$k};
     if ((ref($v) eq "ARRAY"))  {
         my @c = ();
         my @v = @$v;
@@ -2347,8 +2353,8 @@ foreach my $k (keys (%mapping)) {
 }
 
 # convert internal perl struct
-foreach my $k (keys (%mapping)) {
-    my $v = $mapping{$k};
+for (my $mi = 0; $mi +1 < scalar(@mapping); $mi+=2) {
+    my ($k,$v) = ($mapping[$mi],$mapping[$mi+1]);
     if ((ref($v) eq "ARRAY"))  {
         my @c = ();
         my @v = @$v;
@@ -2376,6 +2382,71 @@ foreach my $k (keys (%mapping)) {
     } else {
         eval(my $js = ::convert_template($k.'::data', $v));
     }
+}
+
+package Hdl;
+sub print_js_out {
+    my ($OUT) = @_;
+    my @a = ();
+
+    print ("
+def = require(\"./def.js\");
+eval(def.consts);
+");
+    print ("function jsout(d) {\n  var o = [], i, j, a;
+  function totok(a) {
+     return def.tokens[a];
+  }
+  function tostr(a) {
+    if( !/^[0-9]/g.exec(a) ) {
+      a = \"\\\"\" + a +\"\\\"\";
+    }
+    return a;   
+  };
+  if (d === undefined) {
+      return 'undefined';
+  }
+  switch(d.type) {\n");
+    
+    for (my $mi = 0; $mi +1 < scalar(@mapping); $mi+=2) {
+        my ($k,$v) = ($mapping[$mi],$mapping[$mi+1]);
+        if ((ref($v) eq "ARRAY"))  {
+            my @c = ();
+            my @v = @$v;
+            my ($s, $n) = (':', 'data');
+            my $e00 = shift(@v);
+            my $v00 = shift(@v);
+            if ($e00 eq 'type') {
+                
+                while (scalar(@v)) {
+                    my $e0 = shift(@v);
+                    my $v0 = shift(@v);
+                    if ($v0 =~ /^\.([_a-zA-Z0-9]+)\(\)$/) { # .a()
+                        push(@c,"    if (!(d['$e0'] === undefined)) { o.push(\"$e0 : \" + jsout(d['$e0'])); }\n");
+                    } elsif ($v0 =~ /^\.\@([_a-zA-Z0-9]+)\(\)$/) { # .@a()
+                        push(@c,"    if (!(d['$e0'] === undefined)) { a = []; for (i = 0, j = d['$e0'].length; i < j; i++) { a.push(jsout(d['$e0'][i])) }; o.push('$e0 : [' + a.join(',') + ']'); }\n");
+                    } elsif ($v0 =~ /^([_a-zA-Z0-9]+)\(\.([_a-zA-Z0-9]+)\)$/) { # x(.a)
+                        push(@c,"    if (!(d['$e0'] === undefined)) { o.push('$e0 :' + totok(d['$e0'])); }\n");
+                    } elsif ($v0 =~ /^\.([_a-zA-Z0-9]+)$/) { # .a
+                        push(@c,"    if (!(d['$e0'] === undefined)) { o.push('$e0 :' + tostr(d['$e0'])); }\n");
+                    } elsif ($v0 =~ /^\["([_a-zA-Z0-9]+)"\]$/) { # ["a"]
+                        push(@c,"    if (!(d['$e0'] === undefined)) { a = []; for (i = 0, j = d['$e0'].length; i < j; i++) { a.push(tostr(d['$e0'][i])) }; o.push('$e0 : [' + a.join(',') + ']'); }\n");
+                    } else {
+                        push(@c,"    if (!(d['$e0'] === undefined)) { o.push('$e0 :' + tostr(d['$e0'])); }\n");
+                    }
+                }
+                print ("  case $v00:\n    o.push('type : $v00');\n");
+                foreach my $c (@c) {
+                    print $c; 
+                }
+                print ("    break;\n");
+                push(@a, [$v00,\@c]);
+            }
+        } 
+    }
+    print ("  }\nreturn '{' + o.join(',') + '}';\n};\n");
+    print ("\n/*export jsout function only*/\nexports.jsout = jsout;\n");
+
 }
 
 1;

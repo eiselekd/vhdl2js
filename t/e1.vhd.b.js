@@ -1,8 +1,799 @@
 if (typeof GENERIC === 'undefined') {
-    eval(read("../rt/def.js"));
-    eval(exports.consts);
+    defs = require("../rt/def.js");
+    eval(defs.consts);
 }
 
+if (typeof entities === 'undefined') {
+    entities = {};
+};
+entities['e1'] = {
+    type: ENTITY,
+    name: "e1",
+    generics: [{
+        type: GENERIC,
+        name: "gcnt",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "19"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "4",
+                    loc: "21"
+                },
+                dir: "to"
+            },
+            loc: "17"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "1",
+            loc: "23"
+        },
+        loc: "15"
+    }, {
+        type: GENERIC,
+        name: "glen",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "0",
+                    loc: "29"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "31",
+                    loc: "31"
+                },
+                dir: "to"
+            },
+            loc: "27"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "0",
+            loc: "33"
+        },
+        loc: "25"
+    }],
+    ports: [{
+        type: GENERIC,
+        name: "gcnt",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "1",
+                    loc: "19"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "4",
+                    loc: "21"
+                },
+                dir: "to"
+            },
+            loc: "17"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "1",
+            loc: "23"
+        },
+        loc: "15"
+    }, {
+        type: GENERIC,
+        name: "glen",
+        mode: "in ",
+        typedef: {
+            type: INTEGERSUBTYPE,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: INTLITERAL,
+                    value: "0",
+                    loc: "29"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "31",
+                    loc: "31"
+                },
+                dir: "to"
+            },
+            loc: "27"
+        },
+        init: {
+            type: INTLITERAL,
+            value: "0",
+            loc: "33"
+        },
+        loc: "25"
+    }]
+};
+if (typeof arch === 'undefined') {
+    arch = {};
+};
+if (typeof arch['e1'] === 'undefined') {
+    arch['e1'] = {};
+};
+arch['e1']['rtl'] = {
+    type: ARCHITECTURE,
+    name: "rtl",
+    of: "e1",
+    decls: [{
+        type: SIGNAL,
+        name: "s0",
+        typdef: {
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "77"
+    }, {
+        type: SIGNAL,
+        name: "s1",
+        typdef: {
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "79"
+    }, {
+        type: SIGNAL,
+        name: "sv0",
+        typdef: {
+            type: TYPECONSTRAINEDARRAY,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: BINARYEXPRESSION,
+                    operator: MINUS,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "88"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "90"
+                    },
+                    loc: "89"
+                },
+                right: {
+                    type: INTLITERAL,
+                    value: "0",
+                    loc: "92"
+                },
+                dir: "downto"
+            },
+            typmark: "std_logic_vector",
+            loc: "87"
+        },
+        loc: "84"
+    }],
+    procs: [{
+        type: PROCESS,
+        label: "p0",
+        decls: [{
+            type: VAR,
+            name: "v0",
+            typedef: {
+                type: TYPEENUM,
+                name: "std_logic"
+            },
+            initializer: {
+                type: ENUMLITERAL,
+                value: "'0'",
+                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+            },
+            loc: "112"
+        }, {
+            type: VAR,
+            name: "v1",
+            typedef: {
+                type: TYPEENUM,
+                name: "std_logic"
+            },
+            initializer: {
+                type: ENUMLITERAL,
+                value: "'0'",
+                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+            },
+            loc: "114"
+        }, {
+            type: VAR,
+            name: "vv0",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: BINARYEXPRESSION,
+                        operator: MINUS,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "glen",
+                            loc: "125"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "127"
+                        },
+                        loc: "126"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "129"
+                    },
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "124"
+            },
+            loc: "121"
+        }],
+        block: [{
+            type: BLOCKSTATEMENT,
+            body: [{
+                type: ASSIGNMENTEXPRESSIONVAR,
+                left: {
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "v1",
+                    loc: "133"
+                },
+                right: {
+                    type: ENUMLITERAL,
+                    value: "'0'",
+                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                },
+                loc: "133"
+            }, {
+                type: ASSIGNMENTEXPRESSIONVAR,
+                left: {
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "v0",
+                    loc: "137"
+                },
+                right: {
+                    type: ENUMLITERAL,
+                    value: "'0'",
+                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                },
+                loc: "137"
+            }, {
+                type: ASSIGNMENTEXPRESSIONVAR,
+                left: {
+                    type: SLICEEXPRESSION,
+                    object: {
+                        type: IDENTIFIER,
+                        phase: 'var',
+                        value: "vv0",
+                        loc: "121"
+                    },
+                    range: {
+                        type: RANGEEXPRESSION,
+                        left: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "143"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "0",
+                            loc: "145"
+                        },
+                        loc: "143"
+                    },
+                    loc: "142"
+                },
+                right: {
+                    type: BINARYEXPRESSION,
+                    operator: CONCAT,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "v1",
+                        loc: "148"
+                    },
+                    right: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "v0",
+                        loc: "150"
+                    },
+                    loc: "149"
+                },
+                loc: "141"
+            }, {
+                type: IFSTATEMENT,
+                test: {
+                    type: UNARYEXPRESSION,
+                    operator: NOT,
+                    left: {
+                        type: BINARYEXPRESSION,
+                        operator: OR,
+                        left: {
+                            type: BINARYEXPRESSION,
+                            operator: EQ,
+                            left: {
+                                type: SLICEEXPRESSION,
+                                object: {
+                                    type: IDENTIFIER,
+                                    phase: 'sig',
+                                    value: "in0",
+                                    loc: "48"
+                                },
+                                range: {
+                                    type: RANGEEXPRESSION,
+                                    left: {
+                                        type: INTLITERAL,
+                                        value: "1",
+                                        loc: "158"
+                                    },
+                                    right: {
+                                        type: INTLITERAL,
+                                        value: "0",
+                                        loc: "160"
+                                    },
+                                    loc: "158"
+                                },
+                                loc: "157"
+                            },
+                            right: {
+                                type: STRINGLITERAL,
+                                value: "01",
+                                loc: "163"
+                            },
+                            loc: "162"
+                        },
+                        right: {
+                            type: BINARYEXPRESSION,
+                            operator: EQ,
+                            left: {
+                                type: INDEXEXPRESSION,
+                                object: {
+                                    type: IDENTIFIER,
+                                    phase: 'sig',
+                                    value: "in0",
+                                    loc: "48"
+                                },
+                                indexes: [{
+                                    type: INTLITERAL,
+                                    value: "0",
+                                    loc: "167"
+                                }],
+                                loc: "166"
+                            },
+                            right: {
+                                type: ENUMLITERAL,
+                                value: "'0'",
+                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                            },
+                            loc: "169"
+                        },
+                        loc: "164"
+                    },
+                    loc: "154"
+                },
+                consequence: {
+                    type: BLOCKSTATEMENT,
+                    body: [{
+                        type: IFSTATEMENT,
+                        test: {
+                            type: BINARYEXPRESSION,
+                            operator: EQ,
+                            left: {
+                                type: INDEXEXPRESSION,
+                                object: {
+                                    type: IDENTIFIER,
+                                    phase: 'sig',
+                                    value: "in0",
+                                    loc: "48"
+                                },
+                                indexes: [{
+                                    type: INTLITERAL,
+                                    value: "1",
+                                    loc: "178"
+                                }],
+                                loc: "177"
+                            },
+                            right: {
+                                type: ENUMLITERAL,
+                                value: "'0'",
+                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                            },
+                            loc: "180"
+                        },
+                        consequence: {
+                            type: BLOCKSTATEMENT,
+                            body: [{
+                                type: ASSIGNMENTEXPRESSIONVAR,
+                                left: {
+                                    type: IDENTIFIER,
+                                    phase: 'name',
+                                    value: "v0",
+                                    loc: "184"
+                                },
+                                right: {
+                                    type: ENUMLITERAL,
+                                    value: "'0'",
+                                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                                },
+                                loc: "184"
+                            }],
+                            loc: "184"
+                        }
+                    }, {
+                        type: ASSIGNMENTEXPRESSIONVAR,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v0",
+                            loc: "191"
+                        },
+                        right: {
+                            type: ENUMLITERAL,
+                            value: "'1'",
+                            loc: "../../../../libraries/ieee/std_logic_1164.v93:44:26"
+                        },
+                        loc: "191"
+                    }],
+                    loc: "174"
+                },
+                alternate: {
+                    type: BLOCKSTATEMENT,
+                    body: [{
+                        type: ASSIGNMENTEXPRESSIONVAR,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v0",
+                            loc: "196"
+                        },
+                        right: {
+                            type: ENUMLITERAL,
+                            value: "'0'",
+                            loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                        },
+                        loc: "196"
+                    }],
+                    loc: "196"
+                }
+            }, {
+                type: IFSTATEMENT,
+                test: {
+                    type: BINARYEXPRESSION,
+                    operator: EQ,
+                    left: {
+                        type: INDEXEXPRESSION,
+                        object: {
+                            type: IDENTIFIER,
+                            phase: 'sig',
+                            value: "in0",
+                            loc: "48"
+                        },
+                        indexes: [{
+                            type: INTLITERAL,
+                            value: "2",
+                            loc: "207"
+                        }],
+                        loc: "206"
+                    },
+                    right: {
+                        type: ENUMLITERAL,
+                        value: "'0'",
+                        loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                    },
+                    loc: "209"
+                },
+                consequence: {
+                    type: BLOCKSTATEMENT,
+                    body: [{
+                        type: IFSTATEMENT,
+                        test: {
+                            type: BINARYEXPRESSION,
+                            operator: EQ,
+                            left: {
+                                type: INDEXEXPRESSION,
+                                object: {
+                                    type: IDENTIFIER,
+                                    phase: 'sig',
+                                    value: "in0",
+                                    loc: "48"
+                                },
+                                indexes: [{
+                                    type: INTLITERAL,
+                                    value: "3",
+                                    loc: "217"
+                                }],
+                                loc: "216"
+                            },
+                            right: {
+                                type: ENUMLITERAL,
+                                value: "'0'",
+                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                            },
+                            loc: "219"
+                        },
+                        consequence: {
+                            type: BLOCKSTATEMENT,
+                            body: [{
+                                type: ASSIGNMENTEXPRESSIONVAR,
+                                left: {
+                                    type: IDENTIFIER,
+                                    phase: 'name',
+                                    value: "v1",
+                                    loc: "223"
+                                },
+                                right: {
+                                    type: ENUMLITERAL,
+                                    value: "'0'",
+                                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                                },
+                                loc: "223"
+                            }],
+                            loc: "223"
+                        }
+                    }, {
+                        type: ASSIGNMENTEXPRESSIONVAR,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v1",
+                            loc: "230"
+                        },
+                        right: {
+                            type: ENUMLITERAL,
+                            value: "'1'",
+                            loc: "../../../../libraries/ieee/std_logic_1164.v93:44:26"
+                        },
+                        loc: "230"
+                    }],
+                    loc: "213"
+                },
+                alternate: {
+                    type: BLOCKSTATEMENT,
+                    body: [{
+                        type: ASSIGNMENTEXPRESSIONVAR,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v1",
+                            loc: "235"
+                        },
+                        right: {
+                            type: ENUMLITERAL,
+                            value: "'0'",
+                            loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
+                        },
+                        loc: "235"
+                    }],
+                    loc: "235"
+                }
+            }, {
+                type: ASSIGNMENTEXPRESSIONSIG,
+                left: {
+                    type: SLICEEXPRESSION,
+                    object: {
+                        type: IDENTIFIER,
+                        phase: 'sig',
+                        value: "out0",
+                        loc: "58"
+                    },
+                    range: {
+                        type: RANGEEXPRESSION,
+                        left: {
+                            type: INTLITERAL,
+                            value: "1",
+                            loc: "244"
+                        },
+                        right: {
+                            type: INTLITERAL,
+                            value: "0",
+                            loc: "246"
+                        },
+                        loc: "244"
+                    },
+                    loc: "243"
+                },
+                right: [{
+                    type: WAVEFORM,
+                    elem: {
+                        type: BINARYEXPRESSION,
+                        operator: CONCAT,
+                        left: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v0",
+                            loc: "249"
+                        },
+                        right: {
+                            type: IDENTIFIER,
+                            phase: 'name',
+                            value: "v1",
+                            loc: "251"
+                        },
+                        loc: "250"
+                    }
+                }],
+                loc: "242"
+            }, {
+                type: ASSIGNMENTEXPRESSIONSIG,
+                left: {
+                    type: INDEXEXPRESSION,
+                    object: {
+                        type: IDENTIFIER,
+                        phase: 'sig',
+                        value: "out0",
+                        loc: "58"
+                    },
+                    indexes: [{
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "255"
+                    }],
+                    loc: "254"
+                },
+                right: [{
+                    type: WAVEFORM,
+                    elem: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "v1",
+                        loc: "258"
+                    }
+                }],
+                loc: "253"
+            }],
+            loc: "133"
+        }]
+    }],
+    concs: [{
+        u: "undeftyp: Hdl::Stmt::ConcAssign::Sig=HASH(0x7fc2a3aa3b20)"
+    }]
+}; /* Package decl libe1 */
+if (typeof package === 'undefined') {
+    package = {};
+};
+package['libe1'] = {
+    type: PACKAGE,
+    decls: [{
+        type: COMPONENT,
+        generics: [{
+            type: GENERIC,
+            name: "gcnt",
+            mode: "in ",
+            typedef: {
+                type: INTEGERSUBTYPE,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "286"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "4",
+                        loc: "288"
+                    },
+                    dir: "to"
+                },
+                loc: "284"
+            },
+            init: {
+                type: INTLITERAL,
+                value: "1",
+                loc: "290"
+            },
+            loc: "282"
+        }, {
+            type: GENERIC,
+            name: "glen",
+            mode: "in ",
+            typedef: {
+                type: INTEGERSUBTYPE,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "296"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "31",
+                        loc: "298"
+                    },
+                    dir: "to"
+                },
+                loc: "294"
+            },
+            init: {
+                type: INTLITERAL,
+                value: "0",
+                loc: "300"
+            },
+            loc: "292"
+        }],
+        ports: [{
+            type: GENERIC,
+            name: "gcnt",
+            mode: "in ",
+            typedef: {
+                type: INTEGERSUBTYPE,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "286"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "4",
+                        loc: "288"
+                    },
+                    dir: "to"
+                },
+                loc: "284"
+            },
+            init: {
+                type: INTLITERAL,
+                value: "1",
+                loc: "290"
+            },
+            loc: "282"
+        }, {
+            type: GENERIC,
+            name: "glen",
+            mode: "in ",
+            typedef: {
+                type: INTEGERSUBTYPE,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: INTLITERAL,
+                        value: "0",
+                        loc: "296"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "31",
+                        loc: "298"
+                    },
+                    dir: "to"
+                },
+                loc: "294"
+            },
+            init: {
+                type: INTLITERAL,
+                value: "0",
+                loc: "300"
+            },
+            loc: "292"
+        }]
+    }]
+};
 if (typeof files === 'undefined') {
     files = {};
 };
@@ -330,338 +1121,203 @@ files['e1.vhd'] = {
             txt: "("
         }, {
             id: 88,
-            txt: "1 "
+            txt: "glen"
         }, {
             id: 89,
-            txt: "downto "
+            txt: "-"
         }, {
             id: 90,
-            txt: "0"
-        }, {
-            id: 91,
-            txt: ")"
-        }, {
-            id: 92,
-            txt: ";"
-        }],
-        [{
-            id: 93,
-            txt: "begin"
-        }],
-        [{
-            id: -1,
-            txt: "  "
-        }, {
-            id: 94,
-            txt: "s1 "
-        }, {
-            id: 95,
-            txt: "<= "
-        }, {
-            id: 96,
-            txt: "s0 "
-        }, {
-            id: 97,
-            txt: "after "
-        }, {
-            id: 98,
-            txt: "2 "
-        }, {
-            id: 99,
-            txt: "ns"
-        }, {
-            id: 100,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "  "
-        }],
-        [{
-            id: -1,
-            txt: "  "
-        }, {
-            id: 101,
-            txt: "p0 "
-        }, {
-            id: 102,
-            txt: ": "
-        }, {
-            id: 103,
-            txt: "process"
-        }, {
-            id: 104,
-            txt: "("
-        }, {
-            id: 105,
-            txt: "rst"
-        }, {
-            id: 106,
-            txt: ", "
-        }, {
-            id: 107,
-            txt: "in0"
-        }, {
-            id: 108,
-            txt: ")"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 109,
-            txt: "variable "
-        }, {
-            id: 110,
-            txt: "v0"
-        }, {
-            id: 111,
-            txt: ", "
-        }, {
-            id: 112,
-            txt: "v1 "
-        }, {
-            id: 113,
-            txt: ": "
-        }, {
-            id: 114,
-            txt: "std_logic "
-        }, {
-            id: 115,
-            txt: ":= "
-        }, {
-            id: 116,
-            txt: "'0'"
-        }, {
-            id: 117,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "  "
-        }, {
-            id: 118,
-            txt: "begin"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 119,
-            txt: "v1 "
-        }, {
-            id: 120,
-            txt: ":= "
-        }, {
-            id: 121,
-            txt: "'0'"
-        }, {
-            id: 122,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 123,
-            txt: "v0 "
-        }, {
-            id: 124,
-            txt: ":= "
-        }, {
-            id: 125,
-            txt: "'0'"
-        }, {
-            id: 126,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 127,
-            txt: "if "
-        }, {
-            id: 128,
-            txt: "("
-        }, {
-            id: 129,
-            txt: "not "
-        }, {
-            id: 130,
-            txt: "("
-        }, {
-            id: 131,
-            txt: "in0"
-        }, {
-            id: 132,
-            txt: "("
-        }, {
-            id: 133,
             txt: "1 "
         }, {
-            id: 134,
+            id: 91,
             txt: "downto "
         }, {
-            id: 135,
+            id: 92,
             txt: "0"
         }, {
-            id: 136,
-            txt: ") "
-        }, {
-            id: 137,
-            txt: "= "
-        }, {
-            id: 138,
-            txt: "\"01\" "
-        }, {
-            id: 139,
-            txt: "or "
-        }, {
-            id: 140,
-            txt: "in0"
-        }, {
-            id: 141,
-            txt: "("
-        }, {
-            id: 142,
-            txt: "0"
-        }, {
-            id: 143,
-            txt: ") "
-        }, {
-            id: 144,
-            txt: "= "
-        }, {
-            id: 145,
-            txt: "'0'"
-        }, {
-            id: 146,
+            id: 93,
             txt: ")"
         }, {
-            id: 147,
-            txt: ") "
-        }, {
-            id: 148,
-            txt: "then"
+            id: 94,
+            txt: ";"
         }],
         [{
             id: -1,
-            txt: "      "
+            txt: "  "
+        }],
+        [{
+            id: 95,
+            txt: "begin"
+        }],
+        [{
+            id: -1,
+            txt: "  "
         }, {
-            id: 149,
-            txt: "if "
+            id: 96,
+            txt: "s1 "
         }, {
-            id: 150,
+            id: 97,
+            txt: "<= "
+        }, {
+            id: 98,
+            txt: "s0 "
+        }, {
+            id: 99,
+            txt: "after "
+        }, {
+            id: 100,
+            txt: "2 "
+        }, {
+            id: 101,
+            txt: "ns"
+        }, {
+            id: 102,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "  "
+        }],
+        [{
+            id: -1,
+            txt: "  "
+        }, {
+            id: 103,
+            txt: "p0 "
+        }, {
+            id: 104,
+            txt: ": "
+        }, {
+            id: 105,
+            txt: "process"
+        }, {
+            id: 106,
             txt: "("
         }, {
-            id: 151,
+            id: 107,
+            txt: "rst"
+        }, {
+            id: 108,
+            txt: ", "
+        }, {
+            id: 109,
             txt: "in0"
         }, {
-            id: 152,
+            id: 110,
+            txt: ")"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 111,
+            txt: "variable "
+        }, {
+            id: 112,
+            txt: "v0"
+        }, {
+            id: 113,
+            txt: ", "
+        }, {
+            id: 114,
+            txt: "v1 "
+        }, {
+            id: 115,
+            txt: ": "
+        }, {
+            id: 116,
+            txt: "std_logic "
+        }, {
+            id: 117,
+            txt: ":= "
+        }, {
+            id: 118,
+            txt: "'0'"
+        }, {
+            id: 119,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 120,
+            txt: "variable "
+        }, {
+            id: 121,
+            txt: "vv0 "
+        }, {
+            id: 122,
+            txt: ": "
+        }, {
+            id: 123,
+            txt: "std_logic_vector"
+        }, {
+            id: 124,
             txt: "("
         }, {
-            id: 153,
-            txt: "1"
+            id: 125,
+            txt: "glen"
         }, {
-            id: 154,
-            txt: ") "
+            id: 126,
+            txt: "-"
         }, {
-            id: 155,
-            txt: "= "
+            id: 127,
+            txt: "1 "
         }, {
-            id: 156,
-            txt: "'0'"
+            id: 128,
+            txt: "downto "
         }, {
-            id: 157,
-            txt: ") "
+            id: 129,
+            txt: "0"
         }, {
-            id: 158,
-            txt: "then"
-        }],
-        [{
-            id: -1,
-            txt: "        "
+            id: 130,
+            txt: ")"
         }, {
-            id: 159,
-            txt: "v0 "
-        }, {
-            id: 160,
-            txt: ":= "
-        }, {
-            id: 161,
-            txt: "'0'"
-        }, {
-            id: 162,
+            id: 131,
             txt: ";"
         }],
         [{
             id: -1,
-            txt: "      "
+            txt: "  "
         }, {
-            id: 163,
-            txt: "end "
-        }, {
-            id: 164,
-            txt: "if"
-        }, {
-            id: 165,
-            txt: ";"
+            id: 132,
+            txt: "begin"
         }],
         [{
             id: -1,
-            txt: "      "
+            txt: "    "
+        }],
+        [{
+            id: -1,
+            txt: "    "
         }, {
-            id: 166,
-            txt: "v0 "
+            id: 133,
+            txt: "v1 "
         }, {
-            id: 167,
+            id: 134,
             txt: ":= "
         }, {
-            id: 168,
-            txt: "'1'"
+            id: 135,
+            txt: "'0'"
         }, {
-            id: 169,
+            id: 136,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "    "
         }, {
-            id: 170,
-            txt: "else"
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 171,
+            id: 137,
             txt: "v0 "
         }, {
-            id: 172,
+            id: 138,
             txt: ":= "
         }, {
-            id: 173,
+            id: 139,
             txt: "'0'"
         }, {
-            id: 174,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 175,
-            txt: "end "
-        }, {
-            id: 176,
-            txt: "if"
-        }, {
-            id: 177,
+            id: 140,
             txt: ";"
         }],
         [],
@@ -669,228 +1325,452 @@ files['e1.vhd'] = {
             id: -1,
             txt: "    "
         }, {
-            id: 178,
+            id: 141,
+            txt: "vv0"
+        }, {
+            id: 142,
+            txt: "("
+        }, {
+            id: 143,
+            txt: "1 "
+        }, {
+            id: 144,
+            txt: "downto "
+        }, {
+            id: 145,
+            txt: "0"
+        }, {
+            id: 146,
+            txt: ") "
+        }, {
+            id: 147,
+            txt: ":= "
+        }, {
+            id: 148,
+            txt: "v1 "
+        }, {
+            id: 149,
+            txt: "& "
+        }, {
+            id: 150,
+            txt: "v0"
+        }, {
+            id: 151,
+            txt: ";"
+        }],
+        [],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 152,
             txt: "if "
         }, {
-            id: 179,
+            id: 153,
             txt: "("
         }, {
-            id: 180,
+            id: 154,
+            txt: "not "
+        }, {
+            id: 155,
+            txt: "("
+        }, {
+            id: 156,
             txt: "in0"
         }, {
-            id: 181,
+            id: 157,
             txt: "("
         }, {
-            id: 182,
-            txt: "2"
+            id: 158,
+            txt: "1 "
         }, {
-            id: 183,
+            id: 159,
+            txt: "downto "
+        }, {
+            id: 160,
+            txt: "0"
+        }, {
+            id: 161,
             txt: ") "
         }, {
-            id: 184,
+            id: 162,
             txt: "= "
         }, {
-            id: 185,
-            txt: "'0'"
+            id: 163,
+            txt: "\"01\" "
         }, {
-            id: 186,
+            id: 164,
+            txt: "or "
+        }, {
+            id: 165,
+            txt: "in0"
+        }, {
+            id: 166,
+            txt: "("
+        }, {
+            id: 167,
+            txt: "0"
+        }, {
+            id: 168,
             txt: ") "
         }, {
-            id: 187,
+            id: 169,
+            txt: "= "
+        }, {
+            id: 170,
+            txt: "'0'"
+        }, {
+            id: 171,
+            txt: ")"
+        }, {
+            id: 172,
+            txt: ") "
+        }, {
+            id: 173,
             txt: "then"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 174,
+            txt: "if "
+        }, {
+            id: 175,
+            txt: "("
+        }, {
+            id: 176,
+            txt: "in0"
+        }, {
+            id: 177,
+            txt: "("
+        }, {
+            id: 178,
+            txt: "1"
+        }, {
+            id: 179,
+            txt: ") "
+        }, {
+            id: 180,
+            txt: "= "
+        }, {
+            id: 181,
+            txt: "'0'"
+        }, {
+            id: 182,
+            txt: ") "
+        }, {
+            id: 183,
+            txt: "then"
+        }],
+        [{
+            id: -1,
+            txt: "        "
+        }, {
+            id: 184,
+            txt: "v0 "
+        }, {
+            id: 185,
+            txt: ":= "
+        }, {
+            id: 186,
+            txt: "'0'"
+        }, {
+            id: 187,
+            txt: ";"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
             id: 188,
-            txt: "if "
-        }, {
-            id: 189,
-            txt: "("
-        }, {
-            id: 190,
-            txt: "in0"
-        }, {
-            id: 191,
-            txt: "("
-        }, {
-            id: 192,
-            txt: "3"
-        }, {
-            id: 193,
-            txt: ") "
-        }, {
-            id: 194,
-            txt: "= "
-        }, {
-            id: 195,
-            txt: "'0'"
-        }, {
-            id: 196,
-            txt: ") "
-        }, {
-            id: 197,
-            txt: "then"
-        }],
-        [{
-            id: -1,
-            txt: "        "
-        }, {
-            id: 198,
-            txt: "v1 "
-        }, {
-            id: 199,
-            txt: ":= "
-        }, {
-            id: 200,
-            txt: "'0'"
-        }, {
-            id: 201,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 202,
             txt: "end "
         }, {
-            id: 203,
+            id: 189,
             txt: "if"
         }, {
-            id: 204,
+            id: 190,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 205,
-            txt: "v1 "
+            id: 191,
+            txt: "v0 "
         }, {
-            id: 206,
+            id: 192,
             txt: ":= "
         }, {
-            id: 207,
+            id: 193,
             txt: "'1'"
         }, {
-            id: 208,
+            id: 194,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "    "
         }, {
-            id: 209,
+            id: 195,
             txt: "else"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 210,
-            txt: "v1 "
-        }, {
-            id: 211,
-            txt: ":= "
-        }, {
-            id: 212,
-            txt: "'0'"
-        }, {
-            id: 213,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 214,
-            txt: "end "
-        }, {
-            id: 215,
-            txt: "if"
-        }, {
-            id: 216,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }],
-        [{
-            id: -1,
-            txt: "    "
-        }, {
-            id: 217,
-            txt: "out0"
-        }, {
-            id: 218,
-            txt: "("
-        }, {
-            id: 219,
-            txt: "1 "
-        }, {
-            id: 220,
-            txt: "downto "
-        }, {
-            id: 221,
-            txt: "0"
-        }, {
-            id: 222,
-            txt: ") "
-        }, {
-            id: 223,
-            txt: "<= "
-        }, {
-            id: 224,
+            id: 196,
             txt: "v0 "
         }, {
+            id: 197,
+            txt: ":= "
+        }, {
+            id: 198,
+            txt: "'0'"
+        }, {
+            id: 199,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 200,
+            txt: "end "
+        }, {
+            id: 201,
+            txt: "if"
+        }, {
+            id: 202,
+            txt: ";"
+        }],
+        [],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 203,
+            txt: "if "
+        }, {
+            id: 204,
+            txt: "("
+        }, {
+            id: 205,
+            txt: "in0"
+        }, {
+            id: 206,
+            txt: "("
+        }, {
+            id: 207,
+            txt: "2"
+        }, {
+            id: 208,
+            txt: ") "
+        }, {
+            id: 209,
+            txt: "= "
+        }, {
+            id: 210,
+            txt: "'0'"
+        }, {
+            id: 211,
+            txt: ") "
+        }, {
+            id: 212,
+            txt: "then"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 213,
+            txt: "if "
+        }, {
+            id: 214,
+            txt: "("
+        }, {
+            id: 215,
+            txt: "in0"
+        }, {
+            id: 216,
+            txt: "("
+        }, {
+            id: 217,
+            txt: "3"
+        }, {
+            id: 218,
+            txt: ") "
+        }, {
+            id: 219,
+            txt: "= "
+        }, {
+            id: 220,
+            txt: "'0'"
+        }, {
+            id: 221,
+            txt: ") "
+        }, {
+            id: 222,
+            txt: "then"
+        }],
+        [{
+            id: -1,
+            txt: "        "
+        }, {
+            id: 223,
+            txt: "v1 "
+        }, {
+            id: 224,
+            txt: ":= "
+        }, {
             id: 225,
-            txt: "& "
+            txt: "'0'"
         }, {
             id: 226,
-            txt: "v1"
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "      "
         }, {
             id: 227,
+            txt: "end "
+        }, {
+            id: 228,
+            txt: "if"
+        }, {
+            id: 229,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 230,
+            txt: "v1 "
+        }, {
+            id: 231,
+            txt: ":= "
+        }, {
+            id: 232,
+            txt: "'1'"
+        }, {
+            id: 233,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 234,
+            txt: "else"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 235,
+            txt: "v1 "
+        }, {
+            id: 236,
+            txt: ":= "
+        }, {
+            id: 237,
+            txt: "'0'"
+        }, {
+            id: 238,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 239,
+            txt: "end "
+        }, {
+            id: 240,
+            txt: "if"
+        }, {
+            id: 241,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }],
+        [{
+            id: -1,
+            txt: "    "
+        }, {
+            id: 242,
+            txt: "out0"
+        }, {
+            id: 243,
+            txt: "("
+        }, {
+            id: 244,
+            txt: "1 "
+        }, {
+            id: 245,
+            txt: "downto "
+        }, {
+            id: 246,
+            txt: "0"
+        }, {
+            id: 247,
+            txt: ") "
+        }, {
+            id: 248,
+            txt: "<= "
+        }, {
+            id: 249,
+            txt: "v0 "
+        }, {
+            id: 250,
+            txt: "& "
+        }, {
+            id: 251,
+            txt: "v1"
+        }, {
+            id: 252,
             txt: "; --v0 & v1;"
         }],
         [{
             id: -1,
             txt: "    "
         }, {
-            id: 228,
+            id: 253,
             txt: "out0"
         }, {
-            id: 229,
+            id: 254,
             txt: "("
         }, {
-            id: 230,
+            id: 255,
             txt: "1"
         }, {
-            id: 231,
+            id: 256,
             txt: ") "
         }, {
-            id: 232,
+            id: 257,
             txt: "<= "
         }, {
-            id: 233,
+            id: 258,
             txt: "v1"
         }, {
-            id: 234,
+            id: 259,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "  "
         }, {
-            id: 235,
+            id: 260,
             txt: "end "
         }, {
-            id: 236,
+            id: 261,
             txt: "process"
         }, {
-            id: 237,
+            id: 262,
             txt: ";"
         }],
         [{
@@ -898,54 +1778,54 @@ files['e1.vhd'] = {
             txt: "  "
         }],
         [{
-            id: 238,
+            id: 263,
             txt: "end"
         }, {
-            id: 239,
+            id: 264,
             txt: ";"
         }],
         [],
         [{
-            id: 240,
+            id: 265,
             txt: "library "
         }, {
-            id: 241,
+            id: 266,
             txt: "ieee"
         }, {
-            id: 242,
+            id: 267,
             txt: ";"
         }],
         [{
-            id: 243,
+            id: 268,
             txt: "use "
         }, {
-            id: 244,
+            id: 269,
             txt: "ieee"
         }, {
-            id: 245,
+            id: 270,
             txt: "."
         }, {
-            id: 246,
+            id: 271,
             txt: "std_logic_1164"
         }, {
-            id: 247,
+            id: 272,
             txt: "."
         }, {
-            id: 248,
+            id: 273,
             txt: "all"
         }, {
-            id: 249,
+            id: 274,
             txt: ";"
         }],
         [],
         [{
-            id: 250,
+            id: 275,
             txt: "package "
         }, {
-            id: 251,
+            id: 276,
             txt: "libe1 "
         }, {
-            id: 252,
+            id: 277,
             txt: "is"
         }],
         [],
@@ -953,942 +1833,240 @@ files['e1.vhd'] = {
             id: -1,
             txt: "  "
         }, {
-            id: 253,
+            id: 278,
             txt: "component "
         }, {
-            id: 254,
+            id: 279,
             txt: "e1 "
         }],
         [{
             id: -1,
             txt: "    "
         }, {
-            id: 255,
+            id: 280,
             txt: "generic "
         }, {
-            id: 256,
+            id: 281,
             txt: "("
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 257,
+            id: 282,
             txt: "gcnt      "
         }, {
-            id: 258,
+            id: 283,
             txt: ": "
         }, {
-            id: 259,
+            id: 284,
             txt: "integer "
         }, {
-            id: 260,
+            id: 285,
             txt: "range "
         }, {
-            id: 261,
+            id: 286,
             txt: "1 "
         }, {
-            id: 262,
+            id: 287,
             txt: "to "
         }, {
-            id: 263,
+            id: 288,
             txt: "4  "
         }, {
-            id: 264,
+            id: 289,
             txt: ":= "
         }, {
-            id: 265,
+            id: 290,
             txt: "1"
         }, {
-            id: 266,
+            id: 291,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 267,
+            id: 292,
             txt: "glen      "
         }, {
-            id: 268,
+            id: 293,
             txt: ": "
         }, {
-            id: 269,
+            id: 294,
             txt: "integer "
         }, {
-            id: 270,
+            id: 295,
             txt: "range "
         }, {
-            id: 271,
+            id: 296,
             txt: "0 "
         }, {
-            id: 272,
+            id: 297,
             txt: "to "
         }, {
-            id: 273,
+            id: 298,
             txt: "31  "
         }, {
-            id: 274,
+            id: 299,
             txt: ":= "
         }, {
-            id: 275,
+            id: 300,
             txt: "0"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 276,
+            id: 301,
             txt: ")"
         }, {
-            id: 277,
+            id: 302,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "    "
         }, {
-            id: 278,
-            txt: "port "
-        }, {
-            id: 279,
-            txt: "("
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 280,
-            txt: "clk "
-        }, {
-            id: 281,
-            txt: ": "
-        }, {
-            id: 282,
-            txt: "in "
-        }, {
-            id: 283,
-            txt: "std_logic"
-        }, {
-            id: 284,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 285,
-            txt: "rst "
-        }, {
-            id: 286,
-            txt: ": "
-        }, {
-            id: 287,
-            txt: "in "
-        }, {
-            id: 288,
-            txt: "std_logic"
-        }, {
-            id: 289,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 290,
-            txt: "in0 "
-        }, {
-            id: 291,
-            txt: ": "
-        }, {
-            id: 292,
-            txt: "in "
-        }, {
-            id: 293,
-            txt: "std_logic_vector"
-        }, {
-            id: 294,
-            txt: "("
-        }, {
-            id: 295,
-            txt: "glen "
-        }, {
-            id: 296,
-            txt: "downto "
-        }, {
-            id: 297,
-            txt: "0"
-        }, {
-            id: 298,
-            txt: ")"
-        }, {
-            id: 299,
-            txt: ";"
-        }],
-        [{
-            id: -1,
-            txt: "      "
-        }, {
-            id: 300,
-            txt: "out0 "
-        }, {
-            id: 301,
-            txt: ": "
-        }, {
-            id: 302,
-            txt: "out "
-        }, {
             id: 303,
-            txt: "std_logic_vector"
+            txt: "port "
         }, {
             id: 304,
             txt: "("
+        }],
+        [{
+            id: -1,
+            txt: "      "
         }, {
             id: 305,
-            txt: "glen "
+            txt: "clk "
         }, {
             id: 306,
-            txt: "downto "
+            txt: ": "
         }, {
             id: 307,
-            txt: "0"
+            txt: "in "
         }, {
             id: 308,
+            txt: "std_logic"
+        }, {
+            id: 309,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 310,
+            txt: "rst "
+        }, {
+            id: 311,
+            txt: ": "
+        }, {
+            id: 312,
+            txt: "in "
+        }, {
+            id: 313,
+            txt: "std_logic"
+        }, {
+            id: 314,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 315,
+            txt: "in0 "
+        }, {
+            id: 316,
+            txt: ": "
+        }, {
+            id: 317,
+            txt: "in "
+        }, {
+            id: 318,
+            txt: "std_logic_vector"
+        }, {
+            id: 319,
+            txt: "("
+        }, {
+            id: 320,
+            txt: "glen "
+        }, {
+            id: 321,
+            txt: "downto "
+        }, {
+            id: 322,
+            txt: "0"
+        }, {
+            id: 323,
+            txt: ")"
+        }, {
+            id: 324,
+            txt: ";"
+        }],
+        [{
+            id: -1,
+            txt: "      "
+        }, {
+            id: 325,
+            txt: "out0 "
+        }, {
+            id: 326,
+            txt: ": "
+        }, {
+            id: 327,
+            txt: "out "
+        }, {
+            id: 328,
+            txt: "std_logic_vector"
+        }, {
+            id: 329,
+            txt: "("
+        }, {
+            id: 330,
+            txt: "glen "
+        }, {
+            id: 331,
+            txt: "downto "
+        }, {
+            id: 332,
+            txt: "0"
+        }, {
+            id: 333,
             txt: ")"
         }],
         [{
             id: -1,
             txt: "      "
         }, {
-            id: 309,
+            id: 334,
             txt: ")"
         }, {
-            id: 310,
+            id: 335,
             txt: ";"
         }],
         [{
             id: -1,
             txt: "  "
         }, {
-            id: 311,
+            id: 336,
             txt: "end "
         }, {
-            id: 312,
+            id: 337,
             txt: "component"
         }, {
-            id: 313,
+            id: 338,
             txt: ";"
         }],
         [],
         [{
-            id: 314,
+            id: 339,
             txt: "end"
         }, {
-            id: 315,
+            id: 340,
             txt: ";"
         }]
     ]
-};
-if (typeof entities === 'undefined') {
-    entities = {};
-};
-entities['e1'] = {
-    type: 'ENTITY',
-    name: "e1",
-    generics: [{
-        type: GENERIC,
-        name: "gcnt",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
-                    type: INTLITERAL,
-                    value: "1",
-                    loc: "19"
-                },
-                right: {
-                    type: INTLITERAL,
-                    value: "4",
-                    loc: "21"
-                },
-                dir: "to"
-            },
-            loc: "17"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "1",
-            loc: "23"
-        },
-        loc: "15"
-    }, {
-        type: GENERIC,
-        name: "glen",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
-                    type: INTLITERAL,
-                    value: "0",
-                    loc: "29"
-                },
-                right: {
-                    type: INTLITERAL,
-                    value: "31",
-                    loc: "31"
-                },
-                dir: "to"
-            },
-            loc: "27"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "0",
-            loc: "33"
-        },
-        loc: "25"
-    }],
-    ports: [{
-        type: GENERIC,
-        name: "gcnt",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
-                    type: INTLITERAL,
-                    value: "1",
-                    loc: "19"
-                },
-                right: {
-                    type: INTLITERAL,
-                    value: "4",
-                    loc: "21"
-                },
-                dir: "to"
-            },
-            loc: "17"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "1",
-            loc: "23"
-        },
-        loc: "15"
-    }, {
-        type: GENERIC,
-        name: "glen",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
-                    type: INTLITERAL,
-                    value: "0",
-                    loc: "29"
-                },
-                right: {
-                    type: INTLITERAL,
-                    value: "31",
-                    loc: "31"
-                },
-                dir: "to"
-            },
-            loc: "27"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "0",
-            loc: "33"
-        },
-        loc: "25"
-    }]
-};
-if (typeof arch === 'undefined') {
-    arch = {};
-};
-if (typeof arch['e1'] === 'undefined') {
-    arch['e1'] = {};
-};
-arch['e1']['rtl'] = {
-    type: ARCHITECTURE,
-    name: "rtl",
-    of: "e1",
-    decls: [{
-        type: SIGNAL,
-        name: "s0",
-        typdef: {
-            type: TYPEENUM,
-            name: "std_logic"
-        },
-        loc: "77"
-    }, {
-        type: SIGNAL,
-        name: "s1",
-        typdef: {
-            type: TYPEENUM,
-            name: "std_logic"
-        },
-        loc: "79"
-    }, {
-        type: SIGNAL,
-        name: "sv0",
-        typdef: {
-            type: TYPECONSTRAINEDARRAY,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
-                    type: INTLITERAL,
-                    value: "1",
-                    loc: "88"
-                },
-                right: {
-                    type: INTLITERAL,
-                    value: "0",
-                    loc: "90"
-                },
-                dir: "downto"
-            },
-            typmark: "std_logic_vector",
-            loc: "87"
-        },
-        loc: "84"
-    }],
-    procs: [{
-        type: PROCESS,
-        label: "p0",
-        decls: [{
-            type: VAR,
-            name: "v0",
-            typedef: {
-                type: TYPEENUM,
-                name: "std_logic"
-            },
-            initializer: {
-                type: ENUMLITERAL,
-                value: "'0'",
-                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-            },
-            loc: "110"
-        }, {
-            type: VAR,
-            name: "v1",
-            typedef: {
-                type: TYPEENUM,
-                name: "std_logic"
-            },
-            initializer: {
-                type: ENUMLITERAL,
-                value: "'0'",
-                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-            },
-            loc: "112"
-        }],
-        block: [{
-            type: BLOCKSTATEMENT,
-            body: [{
-                type: ASSIGNMENTEXPRESSIONVAR,
-                left: {
-                    type: IDENTIFIER,
-                    phase: 'name',
-                    value: "v1",
-                    loc: "119"
-                },
-                right: {
-                    type: ENUMLITERAL,
-                    value: "'0'",
-                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                },
-                loc: "119"
-            }, {
-                type: ASSIGNMENTEXPRESSIONVAR,
-                left: {
-                    type: IDENTIFIER,
-                    phase: 'name',
-                    value: "v0",
-                    loc: "123"
-                },
-                right: {
-                    type: ENUMLITERAL,
-                    value: "'0'",
-                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                },
-                loc: "123"
-            }, {
-                type: IFSTATEMENT,
-                test: {
-                    type: UNARYEXPRESSION,
-                    operator: NOT,
-                    left: {
-                        type: BINARYEXPRESSION,
-                        operator: OR,
-                        left: {
-                            type: BINARYEXPRESSION,
-                            operator: EQ,
-                            left: {
-                                type: SLICEEXPRESSION,
-                                object: {
-                                    type: IDENTIFIER,
-                                    phase: 'sig',
-                                    value: "in0",
-                                    loc: "48"
-                                },
-                                range: {
-                                    type: RANGEEXPRESSION,
-                                    left: {
-                                        type: INTLITERAL,
-                                        value: "1",
-                                        loc: "133"
-                                    },
-                                    right: {
-                                        type: INTLITERAL,
-                                        value: "0",
-                                        loc: "135"
-                                    },
-                                    loc: "133"
-                                },
-                                loc: "132"
-                            },
-                            right: {
-                                type: STRINGLITERAL,
-                                value: "01",
-                                loc: "138"
-                            },
-                            loc: "137"
-                        },
-                        right: {
-                            type: BINARYEXPRESSION,
-                            operator: EQ,
-                            left: {
-                                type: INDEXEXPRESSION,
-                                object: {
-                                    type: IDENTIFIER,
-                                    phase: 'sig',
-                                    value: "in0",
-                                    loc: "48"
-                                },
-                                indexes: [{
-                                    type: INTLITERAL,
-                                    value: "0",
-                                    loc: "142"
-                                }],
-                                loc: "141"
-                            },
-                            right: {
-                                type: ENUMLITERAL,
-                                value: "'0'",
-                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                            },
-                            loc: "144"
-                        },
-                        loc: "139"
-                    },
-                    loc: "129"
-                },
-                consequence: {
-                    type: BLOCKSTATEMENT,
-                    body: [{
-                        type: IFSTATEMENT,
-                        test: {
-                            type: BINARYEXPRESSION,
-                            operator: EQ,
-                            left: {
-                                type: INDEXEXPRESSION,
-                                object: {
-                                    type: IDENTIFIER,
-                                    phase: 'sig',
-                                    value: "in0",
-                                    loc: "48"
-                                },
-                                indexes: [{
-                                    type: INTLITERAL,
-                                    value: "1",
-                                    loc: "153"
-                                }],
-                                loc: "152"
-                            },
-                            right: {
-                                type: ENUMLITERAL,
-                                value: "'0'",
-                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                            },
-                            loc: "155"
-                        },
-                        consequence: {
-                            type: BLOCKSTATEMENT,
-                            body: [{
-                                type: ASSIGNMENTEXPRESSIONVAR,
-                                left: {
-                                    type: IDENTIFIER,
-                                    phase: 'name',
-                                    value: "v0",
-                                    loc: "159"
-                                },
-                                right: {
-                                    type: ENUMLITERAL,
-                                    value: "'0'",
-                                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                                },
-                                loc: "159"
-                            }],
-                            loc: "159"
-                        }
-                    }, {
-                        type: ASSIGNMENTEXPRESSIONVAR,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v0",
-                            loc: "166"
-                        },
-                        right: {
-                            type: ENUMLITERAL,
-                            value: "'1'",
-                            loc: "../../../../libraries/ieee/std_logic_1164.v93:44:26"
-                        },
-                        loc: "166"
-                    }],
-                    loc: "149"
-                },
-                alternate: {
-                    type: BLOCKSTATEMENT,
-                    body: [{
-                        type: ASSIGNMENTEXPRESSIONVAR,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v0",
-                            loc: "171"
-                        },
-                        right: {
-                            type: ENUMLITERAL,
-                            value: "'0'",
-                            loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                        },
-                        loc: "171"
-                    }],
-                    loc: "171"
-                }
-            }, {
-                type: IFSTATEMENT,
-                test: {
-                    type: BINARYEXPRESSION,
-                    operator: EQ,
-                    left: {
-                        type: INDEXEXPRESSION,
-                        object: {
-                            type: IDENTIFIER,
-                            phase: 'sig',
-                            value: "in0",
-                            loc: "48"
-                        },
-                        indexes: [{
-                            type: INTLITERAL,
-                            value: "2",
-                            loc: "182"
-                        }],
-                        loc: "181"
-                    },
-                    right: {
-                        type: ENUMLITERAL,
-                        value: "'0'",
-                        loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                    },
-                    loc: "184"
-                },
-                consequence: {
-                    type: BLOCKSTATEMENT,
-                    body: [{
-                        type: IFSTATEMENT,
-                        test: {
-                            type: BINARYEXPRESSION,
-                            operator: EQ,
-                            left: {
-                                type: INDEXEXPRESSION,
-                                object: {
-                                    type: IDENTIFIER,
-                                    phase: 'sig',
-                                    value: "in0",
-                                    loc: "48"
-                                },
-                                indexes: [{
-                                    type: INTLITERAL,
-                                    value: "3",
-                                    loc: "192"
-                                }],
-                                loc: "191"
-                            },
-                            right: {
-                                type: ENUMLITERAL,
-                                value: "'0'",
-                                loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                            },
-                            loc: "194"
-                        },
-                        consequence: {
-                            type: BLOCKSTATEMENT,
-                            body: [{
-                                type: ASSIGNMENTEXPRESSIONVAR,
-                                left: {
-                                    type: IDENTIFIER,
-                                    phase: 'name',
-                                    value: "v1",
-                                    loc: "198"
-                                },
-                                right: {
-                                    type: ENUMLITERAL,
-                                    value: "'0'",
-                                    loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                                },
-                                loc: "198"
-                            }],
-                            loc: "198"
-                        }
-                    }, {
-                        type: ASSIGNMENTEXPRESSIONVAR,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v1",
-                            loc: "205"
-                        },
-                        right: {
-                            type: ENUMLITERAL,
-                            value: "'1'",
-                            loc: "../../../../libraries/ieee/std_logic_1164.v93:44:26"
-                        },
-                        loc: "205"
-                    }],
-                    loc: "188"
-                },
-                alternate: {
-                    type: BLOCKSTATEMENT,
-                    body: [{
-                        type: ASSIGNMENTEXPRESSIONVAR,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v1",
-                            loc: "210"
-                        },
-                        right: {
-                            type: ENUMLITERAL,
-                            value: "'0'",
-                            loc: "../../../../libraries/ieee/std_logic_1164.v93:43:26"
-                        },
-                        loc: "210"
-                    }],
-                    loc: "210"
-                }
-            }, {
-                type: ASSIGNMENTEXPRESSIONSIG,
-                left: {
-                    type: SLICEEXPRESSION,
-                    object: {
-                        type: IDENTIFIER,
-                        phase: 'sig',
-                        value: "out0",
-                        loc: "58"
-                    },
-                    range: {
-                        type: RANGEEXPRESSION,
-                        left: {
-                            type: INTLITERAL,
-                            value: "1",
-                            loc: "219"
-                        },
-                        right: {
-                            type: INTLITERAL,
-                            value: "0",
-                            loc: "221"
-                        },
-                        loc: "219"
-                    },
-                    loc: "218"
-                },
-                right: [{
-                    type: WAVEFORM,
-                    elem: {
-                        type: BINARYEXPRESSION,
-                        operator: CONCAT,
-                        left: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v0",
-                            loc: "224"
-                        },
-                        right: {
-                            type: IDENTIFIER,
-                            phase: 'name',
-                            value: "v1",
-                            loc: "226"
-                        },
-                        loc: "225"
-                    }
-                }],
-                loc: "217"
-            }, {
-                type: ASSIGNMENTEXPRESSIONSIG,
-                left: {
-                    type: INDEXEXPRESSION,
-                    object: {
-                        type: IDENTIFIER,
-                        phase: 'sig',
-                        value: "out0",
-                        loc: "58"
-                    },
-                    indexes: [{
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "230"
-                    }],
-                    loc: "229"
-                },
-                right: [{
-                    type: WAVEFORM,
-                    elem: {
-                        type: IDENTIFIER,
-                        phase: 'name',
-                        value: "v1",
-                        loc: "233"
-                    }
-                }],
-                loc: "228"
-            }],
-            loc: "119"
-        }]
-    }],
-    concs: [{
-        u: "undeftyp: Hdl::Stmt::ConcAssign::Sig=HASH(0x7fa2c9289148)"
-    }]
-}; /* Package decl libe1 */
-if (typeof package === 'undefined') {
-    package = {};
-};
-package['libe1'] = {
-    type: PACKAGE,
-    decls: [{
-        type: COMPONENT,
-        generics: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "261"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "263"
-                    },
-                    dir: "to"
-                },
-                loc: "259"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "265"
-            },
-            loc: "257"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "271"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "273"
-                    },
-                    dir: "to"
-                },
-                loc: "269"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "275"
-            },
-            loc: "267"
-        }],
-        ports: [{
-            type: GENERIC,
-            name: "gcnt",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "261"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "263"
-                    },
-                    dir: "to"
-                },
-                loc: "259"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "265"
-            },
-            loc: "257"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
-                        type: INTLITERAL,
-                        value: "0",
-                        loc: "271"
-                    },
-                    right: {
-                        type: INTLITERAL,
-                        value: "31",
-                        loc: "273"
-                    },
-                    dir: "to"
-                },
-                loc: "269"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "275"
-            },
-            loc: "267"
-        }]
-    }]
 };

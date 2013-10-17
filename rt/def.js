@@ -1,10 +1,12 @@
 
 var tokens = [
+ "NOP",
 
  "ARCHITECTURE",
  "ENTITY",
  "PROCESS",
  "PACKAGE",
+ "PACKAGEBODY",
 
  "CONCAT",
     
@@ -92,7 +94,8 @@ var tokens = [
  "SIGNAL", 
  "ATTR", 
 
-
+ "SELECT",
+ "APPEND",
 
 
  "SEMICOLON",
@@ -148,8 +151,8 @@ for (var i = 0, j = tokens.length; i < j; i++) {
 }
 consts += ";";
 
-exports = {};
 exports.consts = consts;
+exports.tokens = tokens;
 
 /*
   Local Variables:

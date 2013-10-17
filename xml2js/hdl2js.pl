@@ -18,6 +18,7 @@ log|e=s
 gensrc|g=s
 genlvl|l=i
 genn|n=s
+genout
 }, @g_more) or usave(\*STDERR);
 
 require "$Bin/hdl.pl";
@@ -33,6 +34,10 @@ if (defined(my $of = $OPT{'outfile'})) {
 if (defined(my $lf = $OPT{'log'})) {
     open LOG, ">$lf" or die $!;
     $LOG=\*LOG;
+}
+if ($OPT{'genout'}) {
+    Hdl::print_js_out($OUT);
+    exit(0);
 }
 if ($OPT{'gensrc'}) {
     Hdl::gensrc($OPT{'gensrc'});
@@ -330,17 +335,12 @@ foreach $f (@ARGV) {
 
 print($OUT "
 if (typeof GENERIC === 'undefined') {
-eval(read(\"../rt/def.js\"));
-eval(exports.consts);
+  defs = require(\"../rt/def.js\");
+  eval(defs.consts);
 }
 
 ");
 
-print $OUT  "if (typeof files === 'undefined') { files = {}; };  ";
-foreach my $f (@o) {
-    my ($of,$o) = @$f;
-    print $OUT "files['".$of."'] = $o;\n";
-}
 
 foreach $f (@ARGV) {
     my $p = XML::LibXML->new();
@@ -386,6 +386,12 @@ foreach $f (@ARGV) {
             }
         }
     }
+}
+
+print $OUT  "if (typeof files === 'undefined') { files = {}; };  ";
+foreach my $f (@o) {
+    my ($of,$o) = @$f;
+    print $OUT "files['".$of."'] = $o;\n";
 }
 
 
