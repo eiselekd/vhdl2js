@@ -67,61 +67,49 @@ entities['top'] = {
         loc: "32"
     }],
     ports: [{
-        type: GENERIC,
-        name: "gcnt",
+        type: PORT,
+        name: "clk",
         mode: "in ",
         typedef: {
-            type: INTEGERSUBTYPE,
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "45"
+    }, {
+        type: PORT,
+        name: "tin0",
+        mode: "in ",
+        typedef: {
+            type: TYPECONSTRAINEDARRAY,
             range: {
                 type: RANGEEXPRESSION,
                 left: {
-                    type: INTLITERAL,
-                    value: "1",
-                    loc: "26"
+                    type: BINARYEXPRESSION,
+                    operator: MINUS,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "gcnt",
+                        loc: "55"
+                    },
+                    right: {
+                        type: INTLITERAL,
+                        value: "1",
+                        loc: "57"
+                    },
+                    loc: "56"
                 },
                 right: {
-                    type: INTLITERAL,
-                    value: "4",
-                    loc: "28"
-                },
-                dir: "to"
-            },
-            loc: "24"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "1",
-            loc: "30"
-        },
-        loc: "22"
-    }, {
-        type: GENERIC,
-        name: "glen",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
                     type: INTLITERAL,
                     value: "0",
-                    loc: "36"
+                    loc: "59"
                 },
-                right: {
-                    type: INTLITERAL,
-                    value: "31",
-                    loc: "38"
-                },
-                dir: "to"
+                dir: "downto"
             },
-            loc: "34"
+            typmark: "std_logic_vector",
+            loc: "54"
         },
-        init: {
-            type: INTLITERAL,
-            value: "0",
-            loc: "40"
-        },
-        loc: "32"
+        loc: "50"
     }]
 };
 if (typeof arch === 'undefined') {

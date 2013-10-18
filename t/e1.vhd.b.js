@@ -67,61 +67,73 @@ entities['e1'] = {
         loc: "25"
     }],
     ports: [{
-        type: GENERIC,
-        name: "gcnt",
+        type: PORT,
+        name: "clk",
         mode: "in ",
         typedef: {
-            type: INTEGERSUBTYPE,
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "38"
+    }, {
+        type: PORT,
+        name: "rst",
+        mode: "in ",
+        typedef: {
+            type: TYPEENUM,
+            name: "std_logic"
+        },
+        loc: "43"
+    }, {
+        type: PORT,
+        name: "in0",
+        mode: "in ",
+        typedef: {
+            type: TYPECONSTRAINEDARRAY,
             range: {
                 type: RANGEEXPRESSION,
                 left: {
-                    type: INTLITERAL,
-                    value: "1",
-                    loc: "19"
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "glen",
+                    loc: "53"
                 },
                 right: {
-                    type: INTLITERAL,
-                    value: "4",
-                    loc: "21"
-                },
-                dir: "to"
-            },
-            loc: "17"
-        },
-        init: {
-            type: INTLITERAL,
-            value: "1",
-            loc: "23"
-        },
-        loc: "15"
-    }, {
-        type: GENERIC,
-        name: "glen",
-        mode: "in ",
-        typedef: {
-            type: INTEGERSUBTYPE,
-            range: {
-                type: RANGEEXPRESSION,
-                left: {
                     type: INTLITERAL,
                     value: "0",
-                    loc: "29"
+                    loc: "55"
+                },
+                dir: "downto"
+            },
+            typmark: "std_logic_vector",
+            loc: "52"
+        },
+        loc: "48"
+    }, {
+        type: PORT,
+        name: "out0",
+        mode: "out ",
+        typedef: {
+            type: TYPECONSTRAINEDARRAY,
+            range: {
+                type: RANGEEXPRESSION,
+                left: {
+                    type: IDENTIFIER,
+                    phase: 'name',
+                    value: "glen",
+                    loc: "63"
                 },
                 right: {
                     type: INTLITERAL,
-                    value: "31",
-                    loc: "31"
+                    value: "0",
+                    loc: "65"
                 },
-                dir: "to"
+                dir: "downto"
             },
-            loc: "27"
+            typmark: "std_logic_vector",
+            loc: "62"
         },
-        init: {
-            type: INTLITERAL,
-            value: "0",
-            loc: "33"
-        },
-        loc: "25"
+        loc: "58"
     }]
 };
 if (typeof arch === 'undefined') {
@@ -668,7 +680,7 @@ arch['e1']['rtl'] = {
         }]
     }],
     concs: [{
-        u: "undeftyp: Hdl::Stmt::ConcAssign::Sig=HASH(0x7fc2a3aa3b20)"
+        u: "undeftyp: Hdl::Stmt::ConcAssign::Sig=HASH(0x7fe2ba2b4a98)"
     }]
 }; /* Package decl libe1 */
 if (typeof package === 'undefined') {
@@ -736,61 +748,73 @@ package['libe1'] = {
             loc: "292"
         }],
         ports: [{
-            type: GENERIC,
-            name: "gcnt",
+            type: PORT,
+            name: "clk",
             mode: "in ",
             typedef: {
-                type: INTEGERSUBTYPE,
+                type: TYPEENUM,
+                name: "std_logic"
+            },
+            loc: "305"
+        }, {
+            type: PORT,
+            name: "rst",
+            mode: "in ",
+            typedef: {
+                type: TYPEENUM,
+                name: "std_logic"
+            },
+            loc: "310"
+        }, {
+            type: PORT,
+            name: "in0",
+            mode: "in ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
                 range: {
                     type: RANGEEXPRESSION,
                     left: {
-                        type: INTLITERAL,
-                        value: "1",
-                        loc: "286"
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "320"
                     },
                     right: {
-                        type: INTLITERAL,
-                        value: "4",
-                        loc: "288"
-                    },
-                    dir: "to"
-                },
-                loc: "284"
-            },
-            init: {
-                type: INTLITERAL,
-                value: "1",
-                loc: "290"
-            },
-            loc: "282"
-        }, {
-            type: GENERIC,
-            name: "glen",
-            mode: "in ",
-            typedef: {
-                type: INTEGERSUBTYPE,
-                range: {
-                    type: RANGEEXPRESSION,
-                    left: {
                         type: INTLITERAL,
                         value: "0",
-                        loc: "296"
+                        loc: "322"
+                    },
+                    dir: "downto"
+                },
+                typmark: "std_logic_vector",
+                loc: "319"
+            },
+            loc: "315"
+        }, {
+            type: PORT,
+            name: "out0",
+            mode: "out ",
+            typedef: {
+                type: TYPECONSTRAINEDARRAY,
+                range: {
+                    type: RANGEEXPRESSION,
+                    left: {
+                        type: IDENTIFIER,
+                        phase: 'name',
+                        value: "glen",
+                        loc: "330"
                     },
                     right: {
                         type: INTLITERAL,
-                        value: "31",
-                        loc: "298"
+                        value: "0",
+                        loc: "332"
                     },
-                    dir: "to"
+                    dir: "downto"
                 },
-                loc: "294"
+                typmark: "std_logic_vector",
+                loc: "329"
             },
-            init: {
-                type: INTLITERAL,
-                value: "0",
-                loc: "300"
-            },
-            loc: "292"
+            loc: "325"
         }]
     }]
 };

@@ -16,6 +16,7 @@ var tokens = [
  "GENERATE",
 
  "GENERIC",
+ "PORT",
 
  "COMPONENT",
  "ATTRIBUTEDEF",

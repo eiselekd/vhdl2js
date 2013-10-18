@@ -1808,6 +1808,15 @@ sub new {
     $r = Hdl::dobless ($r, 'Hdl::Port');
     my @lr = ($xml->nonBlankChildNodes());
     confess ("Expect type/val\n".::Hdl::dbgxml($xml)) if (!(scalar(@lr) == 1 || scalar(@lr) == 2));
+
+    $r->{_typ} = Hdl::Type::new($p,'type',$lr[0]);
+    
+    print ("Cannot parse type") if (!($r->{_typ}));
+    confess("Cannot create type that is printable to js: ".$r->{_typ}." ".Hdl::dbgxml($lr[0])) if ((!defined($r->{_typ})) || !$r->{_typ}->can('js'));
+    
+    $r->{_init} = Hdl::Expr::new($r,$lr[1]) if ((scalar(@lr) > 1)); 
+
+
     $p->setSymbol($r->{n},$r) if (length($r->{n}));
     return $r;
 }
@@ -1999,7 +2008,7 @@ sub new {
     my @g = map { Hdl::Generic::new($r,$_,$gidx++) } $arch->findnodes('./generics/interface_chain/interface_declaration');
     $r->{'_gen'} = [@g];
     my @p = map { Hdl::Port::new($r,$_) } $arch->findnodes('./ports/interface_chain/interface_declaration');
-    $r->{'_prt'} = [@g];
+    $r->{'_prt'} = [@p];
     
     $p->setSymbol($r->{n}, $r) if (length($r->{n}));
     
@@ -2154,6 +2163,7 @@ package Hdl;
 
 
             '::Hdl::Generic'                   , [ 'type' , "GENERIC", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()', 'loc' , '.loc' ],
+            '::Hdl::Port'                   , [ 'type' , "PORT", 'name', '.n', 'mode', '.mode', 'typedef', '._typ()', 'init', '._init()', 'loc' , '.loc' ],
             
             '::Hdl::Component'                 , [ 'type' , "COMPONENT", 'generics', '.@_gen()', 'ports', '.@_prt()', 'loc' , '.loc' ],
             '::Hdl::Attribute'                 , [ 'type' , "ATTRIBUTEDEF", 'val', '._val()', 'names', '["names"]', 'loc' , '.loc' ], # todo print names array of Hdl::Attribute

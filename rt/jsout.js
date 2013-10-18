@@ -69,6 +69,14 @@ function jsout(d) {
     if (!(d['init'] === undefined)) { o.push("init : " + jsout(d['init'])); }
     if (!(d['loc'] === undefined)) { o.push('loc :' + tostr(d['loc'])); }
     break;
+  case PORT:
+    o.push('type : PORT');
+    if (!(d['name'] === undefined)) { o.push('name :' + tostr(d['name'])); }
+    if (!(d['mode'] === undefined)) { o.push('mode :' + tostr(d['mode'])); }
+    if (!(d['typedef'] === undefined)) { o.push("typedef : " + jsout(d['typedef'])); }
+    if (!(d['init'] === undefined)) { o.push("init : " + jsout(d['init'])); }
+    if (!(d['loc'] === undefined)) { o.push('loc :' + tostr(d['loc'])); }
+    break;
   case COMPONENT:
     o.push('type : COMPONENT');
     if (!(d['generics'] === undefined)) { a = []; for (i = 0, j = d['generics'].length; i < j; i++) { a.push(jsout(d['generics'][i])) }; o.push('generics : [' + a.join(',') + ']'); }
