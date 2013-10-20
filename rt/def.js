@@ -96,7 +96,11 @@ var tokens = [
  "ATTR", 
 
  "SELECT",
+ "SELECT_INDEX",
+ "SELECT_SLICE",
  "APPEND",
+ "SYMATCASE",
+ "SYMATASSIGN",
 
 
  "SEMICOLON",

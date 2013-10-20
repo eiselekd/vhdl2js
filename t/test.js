@@ -11,7 +11,6 @@ var e = f.fold(arch['e1']['rtl'], c);
 var v = e['procs'][0]['_scope'].getSym("v0",undefined, 0);
 console.log(v);
 
-
 console.log("a=");
 console.log(jsout.jsout(e));
 console.log(";");

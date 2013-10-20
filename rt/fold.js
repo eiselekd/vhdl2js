@@ -43,57 +43,99 @@ function intLiteral(v,x) {
     this.type = INTLITERAL;
     this.value = v;
 }
-intLiteral.prototype.plus = function(b) {
-    return intLiteral(this.value + b.value);
+intLiteral.prototype.plus = function(b,n) {
+    return intLiteral(this.value + b.value,{_expr:n});
 }
-intLiteral.prototype.minus = function(b) {
-    return intLiteral(this.value - b.value);
+intLiteral.prototype.minus = function(b,n) {
+    return intLiteral(this.value - b.value,{_expr:n});
 }
-intLiteral.prototype.eq = function() {
-    return intLiteral(this.value == b.value);
+intLiteral.prototype.eq = function(b,n) {
+    return intLiteral(this.value == b.value,{_expr:n});
 }
-intLiteral.prototype.ne = function() {
-    return intLiteral(this.value != b.value);
+intLiteral.prototype.ne = function(b,n) {
+    return intLiteral(this.value != b.value,{_expr:n});
 }
-intLiteral.prototype.or = function() {
-    return intLiteral(this.value | b.value);
+intLiteral.prototype.or = function(b,n) {
+    return intLiteral(this.value | b.value,{_expr:n});
 }
 
-function ArrayType() {
-    
+function stringLiteral(v,x) {
+    if (!(x === undefined)) { 
+        for (key in x) {
+            if (!(x[key] === undefined)) {
+                this[key] = x[key];
+            }
+        }
+    }
+    this.type = STRINGLITERAL;
+    this.value = v;
 }
+stringLiteral.prototype.plus = function(b,n) {
+    return stringLiteral(this.value + b.value,{_expr:n});
+}
+stringLiteral.prototype.minus = function(b,n) {
+    return stringLiteral(this.value - b.value,{_expr:n});
+}
+stringLiteral.prototype.eq = function(b,n) {
+    return stringLiteral(this.value == b.value,{_expr:n});
+}
+stringLiteral.prototype.ne = function(b,n) {
+    return stringLiteral(this.value != b.value,{_expr:n});
+}
+stringLiteral.prototype.or = function(b,n) {
+    return stringLiteral(this.value | b.value,{_expr:n});
+}
+stringLiteral.prototype.concat = function(b,n) {
+    return stringLiteral(this.value + b.value,{_expr:n});
+}
+
 
 /******* flatten left side select tree of a "v(0 to 1) := v1 & v2; " ********/
 
-Node.prototype._flatselect = function(a) {
+Node.prototype._flatselect = function() {
+    var r = undefined, e;
     switch(this.type) {
-    case RANGEEXPRESSION:
+    case SELECT:
+        r = this;
+        break;
+    case SYMATCASE:
+    case SYMATASSIGN:
     case IDENTIFIER:
-        a.push(this);
+        r = copy({type:SELECT,object:this, indexes:[],_unflat:this},{});
         break;
     case SLICEEXPRESSION:
-        this.object._flatselect(a);
-        this.range._flatselect(a);
+        if ((r = this.object._flatselect())) {
+            this['type'] = SELECT_SLICE;
+            r.indexes.push(this);
+        }
         break;
     case INDEXEXPRESSION:
-        this.object._flatselect(a);
-        this.indexes.mapEach(function (e) { e._flatselect(a) });
+        if ((r = this.object._flatselect())) {
+            this['type'] = SELECT_INDEX;
+            r.indexes.push(this);
+        }
         break;
     }
-    return a;
+    return r;
 }
 Node.prototype.flatselect = function() {
-    var r = copy({type:SELECT,indexes:[],_unflat:this},{});
-    this._flatselect(r['indexes']);
-    var id = r['indexes'].shift();
-    r['object'] = id;
+    var r;
+    if (!(r = this._flatselect())) {
+        r = this;
+    }
     return r;
 }
 
 /******* flatten right side concat tree of a "v(0 to 1) := v1 & v2; " ********/
 
 Node.prototype._flatappend = function(a) {
+    var i, j;
     switch(this.type) {
+    case APPEND:
+        for (i = 0, j = this.elements.length; i < j; i++) {
+            a.elements.push(this.elements[i]);
+        }
+        break;
     case BINARYEXPRESSION:
         if ( this.operator == CONCAT) {
             this.left._flatappend(a);
@@ -101,61 +143,74 @@ Node.prototype._flatappend = function(a) {
             break;
         }
     default:
-        a.push(this);
+        a.elements.push(this);
         break;
     }
     return a;
 }
 Node.prototype.flatappend = function() {
-    var r = copy({type:APPEND,elements:[],_unflat:this},{});
-    this._flatappend(r['elements']);
+    var r = this;
+    if (this.type == BINARYEXPRESSION &&
+        this.operator == CONCAT) {
+        r = copy({type:APPEND,elements:[],_unflat:this},{});
+        this._flatappend(r);
+    } 
     return r;
 }
 
 /******** Symbols **********/
 
-function Symbol(s, d) {
+function Symbol(c, s, d) {
     if ((this.up = s)) {
         this.name = s.name;
     }
-    this.assignements = [];
+    this.assignements = undefined;
     this.definition = d;
     /* each symbol has a seperate incarnations for each id-then-else block, 
      * Ctx.cpath depicts the current clause */
     this.cases = {};  /* type Scope */
+    this.parentcase = c;
 }
 
-function SymbolCase(s,c) {
-    this.sym = s;
-    this.case = c;
-    this.next = undefined;
-    this.blocks = [];
+function genSymbolCase(s,c) {
+    var r = copy({type:SYMATCASE},{});
+    r.symbol = s;
+    r.case = c;
+    r.next = undefined;
+    r.blocks = [];
+    return r;
 }
 
-SymbolCase.prototype.ofCaseBlock = function(s,c,d,gen) {
+Node.prototype.ofCaseBlock = function(s,c,d,gen) {
     var sym;
     if (!(sym = this.blocks[c.block]) && gen) {
-        this.blocks[c.block] = (sym = new Symbol(s, d));
+        this.blocks[c.block] = (sym = new Symbol(this, s, d));
     }
     return sym;
 }
 
-function SymbolAssign(s,from,to) {
-    this.symbol = s;
-    this.next = undefined;
-    this.slice = from;
-    this.value = to;
+function genSymbolAssign(s,from,to) {
+    var r = copy({type:SYMATASSIGN},{});
+    r.symbol = s;
+    r.next = undefined;
+    r.slice = from;
+    r.value = to;
+    return r;
 }
 
-Symbol.prototype.assign = function(a,b) {
-    this.assignements.push(new SymbolAssign(this, a, b));
+Symbol.prototype.assign = function(a,b,x) {
+    /* retrive the current variable state through .resolve */
+    var sc = genSymbolAssign(this, a, b);
+    sc.next = this.assignements;
+    this.assignements = sc;
 }
 
 Symbol.prototype.ofCase = function(c, d, gen) {
     var sc;
     if (!(sc = this.cases[c.id]) && gen) {
-        this.cases[c.id] = (sc = new SymbolCase(this, c, this));
-        this.assignements.push(sc);
+        this.cases[c.id] = (sc = genSymbolCase(this, c, this));
+        sc.next = this.assignements;
+        this.assignements = sc;
     }
     return (!sc) ? unedfined : sc.ofCaseBlock(this,c,d,gen);
 }
@@ -237,6 +292,9 @@ Ctx.prototype.getSym = function(name, d, gen) {
         nxt = cur.ofCase(c, d, gen);
         cur = nxt;
     }
+    if (!gen) {
+        return cur ? cur.assignements : undefined;
+    }
     return cur;
 }
 
@@ -254,6 +312,8 @@ function Reference(base, propertyName, node, isarr) {
  * v(0 to 1) := v1(0) & v2(0);
  */
 function getValue (v) {
+    
+    
     if (v instanceof Reference) {
         return v.base[v.propertyName];
     }
@@ -382,7 +442,17 @@ fold.prototype = {
     'INTLITERAL' : function (d,x) { return copy(d, {}); },
     'ENUMLITERAL' : function (d,x) { return copy(d, {}); },
     'STRINGLITERAL' : function (d,x) { return copy(d, {}); },
-    'IDENTIFIER' : function (d,x) { return copy(d, { }); },
+    'IDENTIFIER' : function (d,x) {
+        var assign;
+        if (x.isr) {
+            assign = x.getSym(d['value'], d, 0); /* get assignment pos in clause-tree */
+            if (assign === undefined) {
+                throw new TypeError(" No assignment for '" + this['value'] + "'");
+            }
+            return assign;
+        }
+        return copy(d, { }); 
+    },
     
     'BLOCKSTATEMENT' : function (d,x) {
         return copy(d, { body: d.body.mapEach(function (e) { return this[foldFor(e)](e, x); }, this) });
@@ -422,7 +492,7 @@ fold.prototype = {
         i = d.initializer;
         tf = this[foldFor(t)](t, x);
         
-        s = new Symbol(null, d);
+        s = new Symbol(null, null, d);
         x.scope.bind(d.name, s);
         
         /*definedVar(x.scope, d.name, tf);*/
@@ -440,22 +510,31 @@ fold.prototype = {
         r = d.range;
         return copy(d, {
             object  : this[foldFor(o)](o, x),
-            range  : this[foldFor(r)](r, x) });
+            range  : this[foldFor(r)](r, x) })
+            .flatselect();
     },
     'INDEXEXPRESSION' : function (d,x) {
         var o;
         o = d.object;
         return copy(d, {
             object  : this[foldFor(o)](o, x),
-            indexes : d.indexes.mapEach(function (e) { return this[foldFor(e)](e, x); }, this)});
+            indexes : d.indexes.mapEach(function (e) { return this[foldFor(e)](e, x); }, this)})
+            .flatselect();
     },
     
     'ASSIGNMENTEXPRESSIONVAR' : function (d,x) {
-        var l, r, av, a, b, al, bl, id, c;
+        var l, r, av, a, b, al, bl, id, c, rw;
         l = d.left;
         r = d.right;
-        a = this[foldFor(l)](l, x);
-        b = this[foldFor(r)](r, x);
+        try {
+            rw = x.isr; x.isr = 0;
+            a = this[foldFor(l)](l, x); /* write */
+            x.isr = 1;
+            b = this[foldFor(r)](r, x); /* read */
+        } finally {
+            x.isr = rw;
+        }
+        
         al = a.flatselect();
         id = al['object'];
         bl = b.flatappend();
@@ -470,7 +549,7 @@ fold.prototype = {
             if (sym === undefined) {
                 throw new TypeError(" Symbol '" + id['value'] + "' not found");
             }
-            sym.assign(al, bl);
+            sym.assign(al, bl, x);
             break;
         default:
             throw new TypeError(defs.tokens[id.type] + " : Not implemented");
@@ -506,19 +585,22 @@ fold.prototype = {
         av = getValue(a = this[foldFor(l)](l , x));
         bv = getValue(b = this[foldFor(r)](r, x));
         if (!vals(av, bv)) {
-            return copy(d, {left:a, right:b});
+            return copy(d, {left:a, right:b})
+                .flatappend();
         }
         switch(d.op) {
         case PLUS:
-            return av.plus(bv);
+            return av.plus(bv,d);
         case OR:
-            return av.or(bv);
+            return av.or(bv,d);
         case MINUS:
-            return av.minus(bv);
+            return av.minus(bv,d);
         case EQ:
-            return av.eq(bv);
+            return av.eq(bv,d);
         case NE:
-            return av.ne(bv);
+            return av.ne(bv,d);
+        case CONCAT:
+            return av.concat(bv,d);
         }
     }, 
     
@@ -531,7 +613,7 @@ fold.prototype = {
         }
         switch(d.op) {
         case NOT:
-            return av.not(bv);
+            return av.not(d);
         }
     },
     
@@ -540,6 +622,46 @@ fold.prototype = {
     },
     
     fold:  function (d,x) { return this[foldFor(d)](d, x); }
+    
+};
+
+function constFold(a) {
+    
+}
+
+
+constFold.prototype = {
+/*
+    'ARCHITECTURE',
+    'PROCESS',
+    'PACKAGE',
+    'ENTITY',
+    'COMPONENT',
+    'SIGNAL',
+    'PACKAGE',
+    'ENTITY',
+    'COMPONENT',
+    'SIGNAL',
+    'TYPECONSTRAINEDARRAY',
+    'WAVEFORM',
+    'TYPEENUM',
+    'INTLITERAL',
+    'ENUMLITERAL',
+    'STRINGLITERAL',
+    'IDENTIFIER',
+    'BLOCKSTATEMENT',
+    'IFSTATEMENT',
+    'VAR',
+    'SLICEEXPRESSION',
+    'INDEXEXPRESSION',
+    'ASSIGNMENTEXPRESSIONVAR',
+    'ASSIGNMENTEXPRESSIONSIG',
+    'RANGEEXPRESSION',
+    'BINARYEXPRESSION',
+    'UNARYEXPRESSION',
+    'NOP',
+*/
+    constFold:  function (d,x) { return this[constFoldFor(d)](d, x); }
     
 };
 

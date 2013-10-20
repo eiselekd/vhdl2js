@@ -451,9 +451,25 @@ function jsout(d) {
     if (!(d['object'] === undefined)) { o.push("object : " + jsout(d['object'])); }
     if (!(d['indexes'] === undefined)) { a = []; for (i = 0, j = d['indexes'].length; i < j; i++) { a.push(jsout(d['indexes'][i])) }; o.push('indexes : [' + a.join(',') + ']'); }
     break;
+  case SELECT_INDEX:
+    o.push('type : SELECT_INDEX');
+    if (!(d['indexes'] === undefined)) { a = []; for (i = 0, j = d['indexes'].length; i < j; i++) { a.push(jsout(d['indexes'][i])) }; o.push('indexes : [' + a.join(',') + ']'); }
+    if (!(d['loc'] === undefined)) { o.push('loc :' + tostr(d['loc'])); }
+    break;
+  case SELECT_SLICE:
+    o.push('type : SELECT_SLICE');
+    if (!(d['range'] === undefined)) { o.push("range : " + jsout(d['range'])); }
+    if (!(d['loc'] === undefined)) { o.push('loc :' + tostr(d['loc'])); }
+    break;
   case APPEND:
     o.push('type : APPEND');
     if (!(d['elements'] === undefined)) { a = []; for (i = 0, j = d['elements'].length; i < j; i++) { a.push(jsout(d['elements'][i])) }; o.push('elements : [' + a.join(',') + ']'); }
+    break;
+  case SYMATCASE:
+    o.push('type : SYMATCASE');
+    break;
+  case SYMATASSIGN:
+    o.push('type : SYMATASSIGN');
     break;
   }
 return '{' + o.join(',') + '}';

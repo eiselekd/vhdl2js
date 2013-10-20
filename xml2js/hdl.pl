@@ -2248,7 +2248,15 @@ package Hdl;
             
             
             '::Hdl::Select'                    , [ 'type', "SELECT", 'object', '.object()',  'indexes', '.@indexes()'  ],  # in fold.js
+            '::Hdl::Select::Index'             , [ 'type' , "SELECT_INDEX",        'indexes' , '.@_idxs()', 'loc' , '.loc' ],
+            '::Hdl::Select::Slice'             , [ 'type' , "SELECT_SLICE",        'range' , '._range()', 'loc' , '.loc' ],
+
+
             '::Hdl::Append'                    , [ 'type', "APPEND", 'elements', '.@elements()'  ],  # in fold.js
+
+            '::Hdl::SymAtCase'                 , [ 'type', "SYMATCASE" ],     # in fold.js
+            '::Hdl::SymAtAssign'               , [ 'type', "SYMATASSIGN"  ],  # in fold.js
+
             
             #'::Hdl::Stmt::ConcAssign::Sig'     , []
            );
