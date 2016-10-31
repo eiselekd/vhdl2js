@@ -15,3 +15,39 @@ prepare-ghdl:
 	tar xvf ghdl-0.30dev.tar.bz2
 	-rm -rf gcc-4.7.2/gcc/vhdl
 	cp -r ghdl-0.30dev/vhdl gcc-4.7.2/gcc/
+
+
+# gcc-6 doesnt work with 4.7 ada. Therefore run inside container:
+# lxc-create -t download -n compile1 -- -d ubuntu -r precise -a amd64
+#  - apt-get install git subversion wget
+#  - apt-get build-dep gcc
+
+prep: gmp mpfr mpc
+
+gmp:
+	apt-get source libgmp-dev;
+	cd gmp*/; ./configure --disable-shared --enable-static --prefix=$(HOME)/bin; make; make install
+
+mpfr:
+	apt-get source libmpfr-dev;
+	cd mpfr*/; ./configure --disable-shared  --enable-static --with-gmp=$(HOME)/bin --prefix=$(HOME)/bin; make; make install
+
+mpc:
+	apt-get source libmpc-dev;
+	cd mpclib*/; ./configure --disable-shared  --enable-static --with-gmp=$(HOME)/bin --prefix=$(HOME)/bin --with-mpfr=$(HOME)/bin; make; make install
+
+
+conf:
+	mkdir -p gcc-4.7.2-build;
+	export PATH=$(HOME)/bin-texinfo:/opt/gcc-4.7.2/bin:$$PATH; \
+        cd gcc-4.7.2-build; ../gcc-4.7.2/configure \
+           --prefix=/opt/gcc-4.7.2-ghdl \
+           --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu \
+           --disable-nls --enable-languages=c,ada,vhdl \
+           --with-gmp=$(HOME)/bin  \
+           --with-mpfr=$(HOME)/bin  \
+           --enable-static \
+           --disable-shared \
+           --disable-bootstrap \
+           --disable-multilib \
+		--enable-multiarch  --with-sysroot=$(CURDIR)/sysroot
