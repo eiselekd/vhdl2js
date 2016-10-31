@@ -41,6 +41,7 @@ mpc:
 
 conf:
 	mkdir -p gcc-4.7.2-build;
+	rm -rf /opt/gcc-4.7.2-ghdl
 	rm -rf $(CURDIR)/sysroot/usr; mkdir -p $(CURDIR)/sysroot/usr 
 	ln -sf /usr/lib/x86_64-linux-gnu $(CURDIR)/sysroot/usr/lib
 	cp -r /usr/include $(CURDIR)/sysroot/usr/include
