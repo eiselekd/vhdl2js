@@ -41,6 +41,9 @@ mpc:
 
 conf:
 	mkdir -p gcc-4.7.2-build;
+	rm -rf $(CURDIR)/sysroot/usr; mkdir -p $(CURDIR)/sysroot/usr 
+	ln -sf /usr/lib/x86_64-linux-gnu $(CURDIR)/sysroot/usr/lib
+	cp -r /usr/include $(CURDIR)/sysroot/usr/include
 	export PATH=$(HOME)/bin-texinfo:/opt/gcc-4.7.2/bin:$$PATH; \
         cd gcc-4.7.2-build; ../gcc-4.7.2/configure \
            --prefix=/opt/gcc-4.7.2-ghdl \
