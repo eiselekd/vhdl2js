@@ -63,7 +63,7 @@ conf:
 build:
 	export PATH=$(HOME)/bin-texinfo:/opt/gcc-4.7.2-ghdl/bin:$$PATH; \
         cd gcc-4.7.2-build; \
-	make 
+	make; make install
 
 dist:
 	mkdir -p $(HOME)/dist
@@ -74,6 +74,7 @@ dist:
 ghdl:
 	cd ghdl-r150/translate; make BE=gcc
 	cd ghdl-r150/translate/ghdldrv; make ghdl_gcc; ln -sf ghdl_gcc ghdl; make install.all
+	ghdl-r150/translate/ghdldrv/ghdl_gcc --xml -fexplicit --ieee=synopsys   -o $(HOME)/src/ghdl-out $(HOME)/src/ghdl-var.vhd
 
 ghdl-r:
 	cd ghdl-r150/translate; make BE=gcc
