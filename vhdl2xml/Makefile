@@ -55,9 +55,10 @@ conf:
            --disable-shared \
            --disable-bootstrap \
            --disable-multilib \
+	   --with-sysroot=$(CURDIR)/sysroot
 
 #--enable-multiarch
-#--with-sysroot=$(CURDIR)/sysroot
+
 
 build:
 	export PATH=$(HOME)/bin-texinfo:/opt/gcc-4.7.2-ghdl/bin:$$PATH; \
