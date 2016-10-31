@@ -1,5 +1,5 @@
 download-ghdl:
-1;4402;0c	rm -rf ghdl
+	rm -rf ghdl
 	svn co -r150 svn://svn.gna.org/svn/ghdl/trunk ghdl
 	cat ghdl-r150.diff | patch -p1 -d ghdl
 
