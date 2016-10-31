@@ -20,7 +20,7 @@ prepare-ghdl:
 #################################################################
 # gcc-6 doesnt work with 4.7 ada. Therefore run inside container:
 # lxc-create -t download -n compile1 -- -d ubuntu -r precise -a amd64
-#  - apt-get install git subversion wget libgmp-dev
+#  - apt-get install git subversion wget libgmp-dev gcc-multilib
 #  - apt-get build-dep gcc
 #################################################################
 
