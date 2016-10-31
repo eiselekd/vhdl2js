@@ -20,7 +20,7 @@ prepare-ghdl:
 #################################################################
 # gcc-6 doesnt work with 4.7 ada. Therefore run inside container:
 # lxc-create -t download -n compile1 -- -d ubuntu -r precise -a amd64
-#  - apt-get install git subversion wget libgmp-dev gcc-multilib
+#  - apt-get install git subversion wget libgmp-dev libmpfr-dev libmpc-dev gcc-multilib
 #  - apt-get build-dep gcc
 #################################################################
 
@@ -38,6 +38,10 @@ mpc:
 	apt-get source libmpc-dev;
 	cd mpclib-0.9/; ./configure --disable-shared  --enable-static --with-gmp=$(HOME)/bin --prefix=$(HOME)/bin --with-mpfr=$(HOME)/bin; make; make install
 
+libiconv:
+	wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.11.tar.gz
+	tar xvf libiconv-1.11.tar.gz;
+	cd libiconv-1.11; ./configure --prefix=/usr; make ; make install
 
 conf:
 	mkdir -p gcc-4.7.2-build;
