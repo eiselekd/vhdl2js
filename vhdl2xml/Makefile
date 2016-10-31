@@ -1,5 +1,5 @@
 download-ghdl:
-	rm -rf ghdl
+1;4402;0c	rm -rf ghdl
 	svn co -r150 svn://svn.gna.org/svn/ghdl/trunk ghdl
 	cat ghdl-r150.diff | patch -p1 -d ghdl
 
@@ -72,18 +72,20 @@ dist:
 	cd $(HOME)/dist; ln -sf $(CURDIR)/gcc-4.7.2 gcc-4.7.2 
 
 
+.PHONY: ghdl
+
 ghdl:
-	cd ghdl-r150/translate; make BE=gcc
-	cd ghdl-r150/translate/ghdldrv; make ghdl_gcc; ln -sf ghdl_gcc ghdl; make install.all
-	ghdl-r150/translate/ghdldrv/ghdl_gcc --xml -fexplicit --ieee=synopsys   -o $(HOME)/src/ghdl-out $(HOME)/src/ghdl-var.vhd
+	cd ghdl/translate; make BE=gcc
+	cd ghdl/translate/ghdldrv; make ghdl_gcc; ln -sf ghdl_gcc ghdl; make install.all
+	ghdl/translate/ghdldrv/ghdl_gcc --xml -fexplicit --ieee=synopsys   -o $(HOME)/src/ghdl-out $(HOME)/src/ghdl-var.vhd
 
 ghdl-r:
-	cd ghdl-r150/translate; make BE=gcc
-	cd ghdl-r150/translate/ghdldrv; make ghdl_gcc; ln -sf ghdl_gcc ghdl; make install.all
-	cd ghdl-r150/translate/grt; make
-	cd ghdl-r150/translate/lib; \
+	cd ghdl/translate; make BE=gcc
+	cd ghdl/translate/ghdldrv; make ghdl_gcc; ln -sf ghdl_gcc ghdl; make install.all
+	cd ghdl/translate/grt; make
+	cd ghdl/translate/lib; \
 	ln -sf ../grt/grt.lst . ; ln -sf ../grt/libgrt.a .;
 
 ghdl-p:
-	cd ghdl-r150/translate; make BE=gcc
-	cd ghdl-r150/translate/ghdldrv; make ghdl_gcc;
+	cd ghdl/translate; make BE=gcc
+	cd ghdl/translate/ghdldrv; make ghdl_gcc;
