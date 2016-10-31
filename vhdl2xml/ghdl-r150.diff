@@ -1942,12 +1942,16 @@
  }
 --- ghdl-r150-ori/translate/gcc/dist-common.sh	2013-04-18 21:16:33.000000000 +0200
 +++ ghdl-r150/translate/gcc/dist-common.sh	2013-04-18 22:19:53.000000000 +0200
-@@ -56,6 +56,8 @@
+@@ -56,6 +56,12 @@
  std_names.ads
  disp_tree.adb
  disp_tree.ads
 +disp_xml.adb
 +disp_xml.ads
++disp_xml_node.adb
++disp_xml_node.ads
++disp_xml_vhdl.adb
++disp_xml_vhdl.ads
  iirs_utils.adb
  iirs_utils.ads
  std_package.adb

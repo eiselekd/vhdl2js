@@ -20,7 +20,7 @@ prepare-ghdl:
 #################################################################
 # gcc-6 doesnt work with 4.7 ada. Therefore run inside container:
 # lxc-create -t download -n compile1 -- -d ubuntu -r precise -a amd64
-#  - apt-get install git subversion wget
+#  - apt-get install git subversion wget libgmp-dev
 #  - apt-get build-dep gcc
 #################################################################
 
@@ -52,7 +52,9 @@ conf:
            --disable-shared \
            --disable-bootstrap \
            --disable-multilib \
-		--enable-multiarch  --with-sysroot=$(CURDIR)/sysroot
+
+#--enable-multiarch
+#--with-sysroot=$(CURDIR)/sysroot
 
 build:
 	export PATH=$(HOME)/bin-texinfo:/opt/gcc-4.7.2-ghdl/bin:$$PATH; \
