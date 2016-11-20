@@ -33,3 +33,4 @@ vhdl.tokens
 vhdlVisitor.cpp
 vhdlVisitor.h
 libvhdlparser.a
+antlr4-runtime-cpp/libantlr4-runtime.a
