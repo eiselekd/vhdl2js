@@ -1,0 +1,4 @@
+#!/bin/bash
+f=`readlink -f $0`
+d=`dirname $f`
+exec java -jar "$d/antlr4-4.6-SNAPSHOT.jar" "$@"
