@@ -1,4 +1,6 @@
 *~
+*.o
+*.dep
 antlr4-runtime-cpp/*/*.bc
 antlr4-runtime-cpp/*/*.js
 antlr4-runtime-cpp/*/*/*.bc
